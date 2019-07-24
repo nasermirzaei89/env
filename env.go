@@ -4,8 +4,10 @@ import (
 	"os"
 )
 
+// Env type
 type Env string
 
+// Environments
 const (
 	Development Env = "development"
 	Testing     Env = "testing"
