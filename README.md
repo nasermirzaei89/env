@@ -17,7 +17,50 @@ go get github.com/nasermirzaei89/env
 
 ## Sample Usage
 
-No sample yet
+### With default value
+
+```go
+package main
+
+import (
+
+"fmt"
+"github.com/nasermirzaei89/env"
+)
+
+func main()  {
+    var b  = env.GetBool("A", true)
+    fmt.Println(b) // true (default)
+
+    var f  = env.GetFloat("B", 14.5)
+    fmt.Println(f) // 14.5 (default)
+
+    var i  = env.GetInt("C", 12)
+    fmt.Println(i) // 12 (default)
+
+    var s  = env.GetString("B", "hi")
+    fmt.Println(s) // hi (default)
+}
+```
+
+### Force setting environment
+
+```go
+package main
+
+import (
+
+"fmt"
+"github.com/nasermirzaei89/env"
+)
+
+func main()  {
+    var s  = env.MustGetString("HOME")
+    fmt.Println(s) // /Users/nasermirzaei89
+
+    s  = env.MustGetString("NEW") // panics
+}
+```
 
 ## Contributing
 
