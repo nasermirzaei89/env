@@ -1,62 +1,56 @@
 package env_test
 
 import (
-	"fmt"
 	"github.com/nasermirzaei89/env"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 )
 
-func except(t *testing.T, actual, excepted interface{}) {
-	if fmt.Sprintf("%+v", excepted) != fmt.Sprintf("%+v", actual) {
-		t.Errorf("\nexcepted: %+v\nactual:   %+v", excepted, actual)
-	}
-}
-
-func notExcept(t *testing.T, actual, notExcepted interface{}) {
-	if fmt.Sprintf("%+v", notExcepted) == fmt.Sprintf("%+v", actual) {
-		t.Errorf("\nnot excepted: %+v\nactual:       %+v", notExcepted, actual)
-	}
-}
-
 func TestEnvironment(t *testing.T) {
 	os.Clearenv()
-	except(t, env.Environment(), "")
+
+	assert.Zero(t, env.Environment())
 
 	_ = os.Setenv("ENV", "testing")
-	except(t, env.Environment(), env.Testing)
+	assert.Equal(t, env.Testing, env.Environment())
 }
 
 func TestIs(t *testing.T) {
 	os.Clearenv()
+
 	_ = os.Setenv("ENV", "testing")
-	except(t, env.Is(env.Testing), true)
+	assert.True(t, env.Is(env.Testing))
 }
 
 func TestIsDevelopment(t *testing.T) {
 	os.Clearenv()
-	except(t, env.IsDevelopment(), false)
+
+	assert.False(t, env.IsDevelopment())
 	_ = os.Setenv("ENV", "development")
-	except(t, env.IsDevelopment(), true)
+	assert.True(t, env.IsDevelopment())
 }
 
 func TestIsTesting(t *testing.T) {
 	os.Clearenv()
-	except(t, env.IsTesting(), false)
+
+	assert.False(t, env.IsTesting())
 	_ = os.Setenv("ENV", "testing")
-	except(t, env.IsTesting(), true)
+	assert.True(t, env.IsTesting())
 }
 
 func TestIsStaging(t *testing.T) {
 	os.Clearenv()
-	except(t, env.IsStaging(), false)
+
+	assert.False(t, env.IsStaging())
 	_ = os.Setenv("ENV", "staging")
-	except(t, env.IsStaging(), true)
+	assert.True(t, env.IsStaging())
 }
 
 func TestIsProduction(t *testing.T) {
 	os.Clearenv()
-	except(t, env.IsProduction(), false)
+
+	assert.False(t, env.IsProduction())
 	_ = os.Setenv("ENV", "production")
-	except(t, env.IsProduction(), true)
+	assert.True(t, env.IsProduction())
 }
