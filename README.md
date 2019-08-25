@@ -23,9 +23,8 @@ go get github.com/nasermirzaei89/env
 package main
 
 import (
-
-"fmt"
-"github.com/nasermirzaei89/env"
+    "fmt"
+    "github.com/nasermirzaei89/env"
 )
 
 func main()  {
@@ -49,9 +48,8 @@ func main()  {
 package main
 
 import (
-
-"fmt"
-"github.com/nasermirzaei89/env"
+    "fmt"
+    "github.com/nasermirzaei89/env"
 )
 
 func main()  {
