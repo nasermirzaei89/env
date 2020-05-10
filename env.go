@@ -7,6 +7,10 @@ import (
 // Env type
 type Env string
 
+func (e Env) String() string {
+	return string(e)
+}
+
 // Environments
 const (
 	Development Env = "development"
