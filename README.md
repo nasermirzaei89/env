@@ -4,9 +4,9 @@ Golang Get Environment Variables Package
 
 [![Build Status](https://travis-ci.org/nasermirzaei89/env.svg?branch=master)](https://travis-ci.org/nasermirzaei89/env)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nasermirzaei89/env)](https://goreportcard.com/report/github.com/nasermirzaei89/env)
-[![GolangCI](https://golangci.com/badges/github.com/nasermirzaei89/env.svg)](https://golangci.com/r/github.com/nasermirzaei89/env)
 [![Codecov](https://codecov.io/gh/nasermirzaei89/env/branch/master/graph/badge.svg)](https://codecov.io/gh/nasermirzaei89/env)
 [![GoDoc](https://godoc.org/github.com/nasermirzaei89/env?status.svg)](https://godoc.org/github.com/nasermirzaei89/env)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/nasermirzaei89/env)](https://pkg.go.dev/github.com/nasermirzaei89/env)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://raw.githubusercontent.com/nasermirzaei89/env/master/LICENSE)
 
 ## Install
