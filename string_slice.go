@@ -21,7 +21,7 @@ func GetStringSlice(key string, def []string) []string {
 	return strings.Split(s, ",")
 }
 
-// MustGetString extracts slice of strings value with format "foo,bar,baz" from env
+// MustGetStringSlice extracts slice of strings value with format "foo,bar,baz" from env
 // if not set, it panics
 func MustGetStringSlice(key string) []string {
 	s, ok := os.LookupEnv(key)
