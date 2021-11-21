@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// GetStringSlice extracts slice of strings value with format "foo,bar,baz" from env
-// if not set, returns default value
+// GetStringSlice extracts slice of strings value with format "foo,bar,baz" from env.
+// if not set, returns default value.
 func GetStringSlice(key string, def []string) []string {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -21,8 +21,8 @@ func GetStringSlice(key string, def []string) []string {
 	return strings.Split(s, ",")
 }
 
-// MustGetStringSlice extracts slice of strings value with format "foo,bar,baz" from env
-// if not set, it panics
+// MustGetStringSlice extracts slice of strings value with format "foo,bar,baz" from env.
+// if not set, it panics.
 func MustGetStringSlice(key string) []string {
 	s, ok := os.LookupEnv(key)
 	if !ok {

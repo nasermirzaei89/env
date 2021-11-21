@@ -6,8 +6,7 @@ import (
 	"strconv"
 )
 
-// GetInt extracts int value from env
-// if not set, returns default value
+// GetInt extracts int value from env. if not set, returns default value.
 func GetInt(key string, def int) int {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -22,8 +21,7 @@ func GetInt(key string, def int) int {
 	return v
 }
 
-// MustGetInt extracts int value from env
-// if not set, it panics
+// MustGetInt extracts int value from env. if not set, it panics.
 func MustGetInt(key string) int {
 	s, ok := os.LookupEnv(key)
 	if !ok {

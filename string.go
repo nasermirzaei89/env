@@ -5,8 +5,7 @@ import (
 	"os"
 )
 
-// GetString extracts string value from env
-// if not set, returns default value
+// GetString extracts string value from env. if not set, returns default value.
 func GetString(key, def string) string {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -16,8 +15,7 @@ func GetString(key, def string) string {
 	return s
 }
 
-// MustGetString extracts string value from env
-// if not set, it panics
+// MustGetString extracts string value from env. if not set, it panics.
 func MustGetString(key string) string {
 	s, ok := os.LookupEnv(key)
 	if !ok {

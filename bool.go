@@ -5,8 +5,7 @@ import (
 	"os"
 )
 
-// GetBool extracts bool value from env
-// if not set, returns default value
+// GetBool extracts bool value from env. if not set, returns default value.
 func GetBool(key string, def bool) bool {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -20,8 +19,7 @@ func GetBool(key string, def bool) bool {
 	return false
 }
 
-// MustGetBool extracts bool value from env
-// if not set, it panics
+// MustGetBool extracts bool value from env. if not set, it panics.
 func MustGetBool(key string) bool {
 	s, ok := os.LookupEnv(key)
 	if !ok {
