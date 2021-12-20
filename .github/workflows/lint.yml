@@ -1,0 +1,15 @@
+name: Lint
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.43.0
