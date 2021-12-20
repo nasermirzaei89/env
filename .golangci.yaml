@@ -1,0 +1,15 @@
+run:
+  deadline: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable-all: true
+  disable:
+    - scopelint # deprecated
+    - golint # deprecated
+    - maligned # deprecated
+    - interfacer # deprecated
+    - varnamelen
+    - dupl
+    - paralleltest
