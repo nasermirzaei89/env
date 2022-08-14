@@ -7,10 +7,6 @@ import (
 // Env type.
 type Env string
 
-func (e Env) String() string {
-	return string(e)
-}
-
 // Popular environments.
 const (
 	Development Env = "development"
@@ -33,8 +29,20 @@ func Environment() Env {
 }
 
 // Is checks whether ENV is what you expected or not.
-func Is(e Env) bool {
-	return Environment() == e
+func Is(e1 Env, ee ...Env) bool {
+	ce := Environment()
+
+	if e1 == ce {
+		return true
+	}
+
+	for i := range ee {
+		if ee[i] == ce {
+			return true
+		}
+	}
+
+	return false
 }
 
 // IsDevelopment checks whether ENV is development or not.

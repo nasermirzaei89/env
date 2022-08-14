@@ -12,8 +12,8 @@ func TestEnv_String(t *testing.T) {
 
 	t.Setenv("ENV", v)
 
-	res := env.Environment().String()
-	assert.Equal(t, v, res)
+	res := env.Environment()
+	assert.EqualValues(t, v, res)
 }
 
 func TestEnvironment(t *testing.T) {
@@ -25,9 +25,23 @@ func TestEnvironment(t *testing.T) {
 }
 
 func TestIs(t *testing.T) {
-	t.Setenv("ENV", "testing")
+	t.Run("Single Env", func(t *testing.T) {
+		t.Setenv("ENV", "testing")
 
-	assert.True(t, env.Is(env.Testing))
+		assert.True(t, env.Is(env.Testing))
+	})
+
+	t.Run("Multiple Envs", func(t *testing.T) {
+		t.Setenv("ENV", "testing")
+
+		assert.True(t, env.Is(env.Development, env.Testing))
+	})
+
+	t.Run("Multiple Envs", func(t *testing.T) {
+		t.Setenv("ENV", "testing")
+
+		assert.True(t, env.Is(env.Testing, env.Development))
+	})
 }
 
 func TestIsDevelopment(t *testing.T) {

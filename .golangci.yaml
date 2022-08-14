@@ -6,10 +6,12 @@ run:
 linters:
   enable-all: true
   disable:
-    - scopelint # deprecated
-    - golint # deprecated
     - maligned # deprecated
+    - ifshort # deprecated
     - interfacer # deprecated
+    - exhaustivestruct # deprecated
+    - golint # deprecated
+    - scopelint # deprecated
     - varnamelen
     - dupl
     - paralleltest
