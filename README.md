@@ -22,23 +22,23 @@ go get github.com/nasermirzaei89/env
 package main
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/nasermirzaei89/env"
+	"github.com/nasermirzaei89/env"
 )
 
-func main()  {
-    b  := env.GetBool("A", true)
-    fmt.Println(b) // true (default)
+func main() {
+	b := env.GetBool("A", true)
+	fmt.Println(b) // true (default)
 
-    f  := env.GetFloat("B", 14.5)
-    fmt.Println(f) // 14.5 (default)
+	f := env.GetFloat64("B", 14.5)
+	fmt.Println(f) // 14.5 (default)
 
-    i  := env.GetInt("C", 12)
-    fmt.Println(i) // 12 (default)
+	i := env.GetInt("C", 12)
+	fmt.Println(i) // 12 (default)
 
-    s  := env.GetString("B", "hi")
-    fmt.Println(s) // hi (default)
+	s := env.GetString("B", "hi")
+	fmt.Println(s) // hi (default)
 }
 ```
 
@@ -48,22 +48,23 @@ func main()  {
 package main
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/nasermirzaei89/env"
+	"github.com/nasermirzaei89/env"
 )
 
-func main()  {
-    s  := env.MustGetString("HOME")
-    fmt.Println(s) // /Users/nasermirzaei89
+func main() {
+	s := env.MustGetString("HOME")
+	fmt.Println(s) // /Users/nasermirzaei89
 
-    s  = env.MustGetString("NEW") // panics
+	s = env.MustGetString("NEW") // panics
 }
 ```
 
 ## Contributing
 
-You can submit a [new issue](https://github.com/nasermirzaei89/env/issues/new) in GitHub [issues](https://github.com/nasermirzaei89/env/issues).
-Or you can [create a fork](https://help.github.com/articles/fork-a-repo),
-hack on your fork and when you're done create a [pull request](https://help.github.com/articles/fork-a-repo#pull-requests),
-so that the code contribution can get merged into the main package.
+You can submit a [new issue](https://github.com/nasermirzaei89/env/issues/new) in
+GitHub [issues](https://github.com/nasermirzaei89/env/issues).
+Or you can [create a fork](https://help.github.com/articles/fork-a-repo), hack on your fork and when you're done create
+a [pull request](https://help.github.com/articles/fork-a-repo#pull-requests), so that the code contribution can get
+merged into the main package.
