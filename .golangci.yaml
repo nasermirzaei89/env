@@ -12,6 +12,10 @@ linters:
     - exhaustivestruct # deprecated
     - golint # deprecated
     - scopelint # deprecated
+    - nosnakecase # deprecated
+    - varcheck # deprecated
+    - structcheck # deprecated
+    - deadcode # deprecated
     - varnamelen
     - dupl
     - paralleltest
