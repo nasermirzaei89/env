@@ -7,43 +7,43 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetIntSlice(t *testing.T) {
-	def := []int{21, 22}
+func TestGetInt8Slice(t *testing.T) {
+	def := []int8{21, 22}
 
-	res := env.GetIntSlice("V1", def)
+	res := env.GetInt8Slice("V1", def)
 	assert.Equal(t, def, res)
 
-	expected := []int{31, 32, 33}
+	expected := []int8{31, 32, 33}
 
 	t.Setenv("V1", "31,32,33")
 
-	res = env.GetIntSlice("V1", def)
+	res = env.GetInt8Slice("V1", def)
 	assert.Equal(t, expected, res)
 
-	expected = []int{}
+	expected = []int8{}
 
 	t.Setenv("V1", "")
 
-	res = env.GetIntSlice("V1", def)
+	res = env.GetInt8Slice("V1", def)
 	assert.Equal(t, expected, res)
 }
 
-func TestMustGetIntSlice(t *testing.T) {
+func TestMustGetInt8Slice(t *testing.T) {
 	assert.Panics(t, func() {
-		env.MustGetIntSlice("V1")
+		env.MustGetInt8Slice("V1")
 	})
 
-	expected := []int{31, 32, 33}
+	expected := []int8{31, 32, 33}
 
 	t.Setenv("V1", "31,32,33")
 
-	res := env.MustGetIntSlice("V1")
+	res := env.MustGetInt8Slice("V1")
 	assert.Equal(t, expected, res)
 
-	expected = []int{}
+	expected = []int8{}
 
 	t.Setenv("V1", "")
 
-	res = env.MustGetIntSlice("V1")
+	res = env.MustGetInt8Slice("V1")
 	assert.Equal(t, expected, res)
 }

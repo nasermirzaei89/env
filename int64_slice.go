@@ -7,23 +7,23 @@ import (
 	"strings"
 )
 
-// GetIntSlice extracts slice of int value with the format "1,2,3" from env. if not set, returns default value.
-func GetIntSlice(key string, def []int) []int {
+// GetInt64Slice extracts slice of int64 value with the format "1,2,3" from env. if not set, returns default value.
+func GetInt64Slice(key string, def []int64) []int64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
 		return def
 	}
 
 	if s == "" {
-		return []int{}
+		return []int64{}
 	}
 
 	ss := strings.Split(s, ",")
 
-	res := make([]int, len(ss))
+	res := make([]int64, len(ss))
 
 	for i := range ss {
-		v, err := strconv.Atoi(ss[i])
+		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize64)
 		if err != nil {
 			return def
 		}
@@ -34,23 +34,23 @@ func GetIntSlice(key string, def []int) []int {
 	return res
 }
 
-// MustGetIntSlice extracts slice of int value with the format "1,2,3" from env. if not set, it panics.
-func MustGetIntSlice(key string) []int {
+// MustGetInt64Slice extracts slice of int64 value with the format "1,2,3" from env. if not set, it panics.
+func MustGetInt64Slice(key string) []int64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
 		panic(fmt.Sprintf("environment variable '%s' not set", key))
 	}
 
 	if s == "" {
-		return []int{}
+		return []int64{}
 	}
 
 	ss := strings.Split(s, ",")
 
-	res := make([]int, len(ss))
+	res := make([]int64, len(ss))
 
 	for i := range ss {
-		v, err := strconv.Atoi(ss[i])
+		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize64)
 		if err != nil {
 			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
 		}
