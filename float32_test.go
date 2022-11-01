@@ -8,36 +8,52 @@ import (
 )
 
 func TestGetFloat32(t *testing.T) {
-	def := float32(12.5)
+	t.Run("GetAbsentFloat32WithDefault", func(t *testing.T) {
+		def := float32(12.5)
 
-	res := env.GetFloat32("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetFloat32("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "invalid")
+	t.Run("GetInvalidFloat32WithDefault", func(t *testing.T) {
+		def := float32(12.5)
 
-	res = env.GetFloat32("V1", def)
+		t.Setenv("V1", "invalid")
 
-	assert.Equal(t, def, res)
+		res := env.GetFloat32("V1", def)
 
-	t.Setenv("V1", "14.5")
+		assert.Equal(t, def, res)
+	})
 
-	res = env.GetFloat32("V1", def)
+	t.Run("GetValidFloat32WithDefault", func(t *testing.T) {
+		def := float32(12.5)
 
-	assert.Equal(t, float32(14.5), res)
+		t.Setenv("V1", "14.5")
+
+		res := env.GetFloat32("V1", def)
+
+		assert.Equal(t, float32(14.5), res)
+	})
 }
 
 func TestMustGetFloat32(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetFloat32("V1")
+	t.Run("MustGetAbsentFloat32", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetFloat32("V1")
+		})
 	})
 
-	assert.Panics(t, func() {
-		t.Setenv("V1", "invalid")
-		env.MustGetFloat32("V1")
+	t.Run("MustGetInvalidFloat32", func(t *testing.T) {
+		assert.Panics(t, func() {
+			t.Setenv("V1", "invalid")
+			env.MustGetFloat32("V1")
+		})
 	})
 
-	t.Setenv("V1", "14.5")
+	t.Run("MustGetValidFloat32", func(t *testing.T) {
+		t.Setenv("V1", "14.5")
 
-	res := env.MustGetFloat32("V1")
-	assert.Equal(t, float32(14.5), res)
+		res := env.MustGetFloat32("V1")
+		assert.Equal(t, float32(14.5), res)
+	})
 }

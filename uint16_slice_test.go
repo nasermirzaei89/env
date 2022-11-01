@@ -20,6 +20,11 @@ func TestGetUint16Slice(t *testing.T) {
 	res = env.GetUint16Slice("V1", def)
 	assert.Equal(t, expected, res)
 
+	t.Setenv("V1", "1,2,Three")
+
+	res = env.GetUint16Slice("V1", def)
+	assert.Equal(t, def, res)
+
 	expected = []uint16{}
 
 	t.Setenv("V1", "")
@@ -39,6 +44,12 @@ func TestMustGetUint16Slice(t *testing.T) {
 
 	res := env.MustGetUint16Slice("V1")
 	assert.Equal(t, expected, res)
+
+	t.Setenv("V1", "1,2,Three")
+
+	assert.Panics(t, func() {
+		env.MustGetUint16Slice("V1")
+	})
 
 	expected = []uint16{}
 

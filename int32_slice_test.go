@@ -20,6 +20,11 @@ func TestGetInt32Slice(t *testing.T) {
 	res = env.GetInt32Slice("V1", def)
 	assert.Equal(t, expected, res)
 
+	t.Setenv("V1", "1,2,Three")
+
+	res = env.GetInt32Slice("V1", def)
+	assert.Equal(t, def, res)
+
 	expected = []int32{}
 
 	t.Setenv("V1", "")
@@ -39,6 +44,12 @@ func TestMustGetInt32Slice(t *testing.T) {
 
 	res := env.MustGetInt32Slice("V1")
 	assert.Equal(t, expected, res)
+
+	t.Setenv("V1", "1,2,Three")
+
+	assert.Panics(t, func() {
+		env.MustGetInt32Slice("V1")
+	})
 
 	expected = []int32{}
 

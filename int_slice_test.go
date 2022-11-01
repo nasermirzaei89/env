@@ -20,6 +20,11 @@ func TestGetIntSlice(t *testing.T) {
 	res = env.GetIntSlice("V1", def)
 	assert.Equal(t, expected, res)
 
+	t.Setenv("V1", "1,2,Three")
+
+	res = env.GetIntSlice("V1", def)
+	assert.Equal(t, def, res)
+
 	expected = []int{}
 
 	t.Setenv("V1", "")
@@ -39,6 +44,12 @@ func TestMustGetIntSlice(t *testing.T) {
 
 	res := env.MustGetIntSlice("V1")
 	assert.Equal(t, expected, res)
+
+	t.Setenv("V1", "1,2,Three")
+
+	assert.Panics(t, func() {
+		env.MustGetIntSlice("V1")
+	})
 
 	expected = []int{}
 

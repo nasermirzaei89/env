@@ -20,6 +20,11 @@ func TestGetUint8Slice(t *testing.T) {
 	res = env.GetUint8Slice("V1", def)
 	assert.Equal(t, expected, res)
 
+	t.Setenv("V1", "1,2,Three")
+
+	res = env.GetUint8Slice("V1", def)
+	assert.Equal(t, def, res)
+
 	expected = []uint8{}
 
 	t.Setenv("V1", "")
@@ -39,6 +44,12 @@ func TestMustGetUint8Slice(t *testing.T) {
 
 	res := env.MustGetUint8Slice("V1")
 	assert.Equal(t, expected, res)
+
+	t.Setenv("V1", "1,2,Three")
+
+	assert.Panics(t, func() {
+		env.MustGetUint8Slice("V1")
+	})
 
 	expected = []uint8{}
 
