@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-// GetFloat32Slice extracts slice of float32 value with the format "1.2,2.3,3.4" from env. if not set, returns default value.
+// GetFloat32Slice extracts slice of float32 value with the format "1.2,2.3,3.4" from env.
+// if not set, returns default value.
 func GetFloat32Slice(key string, def []float32) []float32 {
 	s, ok := os.LookupEnv(key)
 	if !ok {

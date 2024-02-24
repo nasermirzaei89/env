@@ -1,21 +1,22 @@
 run:
-  deadline: 5m
+  timeout: 5m
   tests: true
   modules-download-mode: readonly
 
 linters:
   enable-all: true
   disable:
-    - maligned # deprecated
-    - ifshort # deprecated
     - interfacer # deprecated
-    - exhaustivestruct # deprecated
-    - golint # deprecated
-    - scopelint # deprecated
-    - nosnakecase # deprecated
-    - varcheck # deprecated
     - structcheck # deprecated
+    - nosnakecase # deprecated
+    - golint # deprecated
+    - varcheck # deprecated
+    - exhaustivestruct # deprecated
     - deadcode # deprecated
+    - ifshort # deprecated
+    - scopelint # deprecated
+    - maligned # deprecated
     - varnamelen
     - dupl
     - paralleltest
+    - depguard

@@ -12,17 +12,17 @@ func TestGetFloat32(t *testing.T) {
 		def := float32(12.5)
 
 		res := env.GetFloat32("V1", def)
-		assert.Equal(t, def, res)
+		assert.InDelta(t, def, res, 0)
 	})
 
 	t.Run("GetInvalidFloat32WithDefault", func(t *testing.T) {
-		def := float32(12.5)
-
 		t.Setenv("V1", "invalid")
+
+		def := float32(12.5)
 
 		res := env.GetFloat32("V1", def)
 
-		assert.Equal(t, def, res)
+		assert.InDelta(t, def, res, 0)
 	})
 
 	t.Run("GetValidFloat32WithDefault", func(t *testing.T) {
@@ -32,7 +32,7 @@ func TestGetFloat32(t *testing.T) {
 
 		res := env.GetFloat32("V1", def)
 
-		assert.Equal(t, float32(14.5), res)
+		assert.InDelta(t, float32(14.5), res, 0)
 	})
 }
 
@@ -54,6 +54,6 @@ func TestMustGetFloat32(t *testing.T) {
 		t.Setenv("V1", "14.5")
 
 		res := env.MustGetFloat32("V1")
-		assert.Equal(t, float32(14.5), res)
+		assert.InDelta(t, float32(14.5), res, 0)
 	})
 }

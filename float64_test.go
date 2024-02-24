@@ -11,17 +11,17 @@ func TestGetFloat64(t *testing.T) {
 	def := 12.5
 
 	res := env.GetFloat64("V1", def)
-	assert.Equal(t, def, res)
+	assert.InDelta(t, def, res, 0)
 
 	t.Setenv("V1", "invalid")
 
 	res = env.GetFloat64("V1", def)
-	assert.Equal(t, def, res)
+	assert.InDelta(t, def, res, 0)
 
 	t.Setenv("V1", "14.5")
 
 	res = env.GetFloat64("V1", def)
-	assert.Equal(t, 14.5, res)
+	assert.InDelta(t, 14.5, res, 0)
 }
 
 func TestMustGetFloat64(t *testing.T) {
@@ -38,5 +38,5 @@ func TestMustGetFloat64(t *testing.T) {
 	t.Setenv("V1", "14.5")
 
 	res := env.MustGetFloat64("V1")
-	assert.Equal(t, 14.5, res)
+	assert.InDelta(t, 14.5, res, 0)
 }

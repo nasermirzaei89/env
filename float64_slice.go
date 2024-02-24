@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-// GetFloat64Slice extracts slice of float64 value with the format "1.2,2.3,3.4" from env. if not set, returns default value.
+// GetFloat64Slice extracts slice of float64 value with the format "1.2,2.3,3.4" from env.
+// if not set, returns default value.
 func GetFloat64Slice(key string, def []float64) []float64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -28,7 +29,7 @@ func GetFloat64Slice(key string, def []float64) []float64 {
 			return def
 		}
 
-		res[i] = float64(v)
+		res[i] = v
 	}
 
 	return res
@@ -55,7 +56,7 @@ func MustGetFloat64Slice(key string) []float64 {
 			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
 		}
 
-		res[i] = float64(v)
+		res[i] = v
 	}
 
 	return res
