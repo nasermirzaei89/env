@@ -1,6 +1,6 @@
 name: Test and Coverage
 
-on: [push]
+on: push
 
 jobs:
   test:
@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.17', '1.18', '1.19']
+        go: [ '1.17', '1.18', '1.19','1.20','1.21','1.22' ]
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
-      with:
-        go-version: ${{ matrix.go }}
-    - name: Run test
-      run: go test -race -coverprofile=coverage.out -covermode=atomic
-    - name: Upload coverage to CodeCov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Run test
+        run: go test -race -coverprofile=coverage.out -covermode=atomic
+      - name: Upload coverage to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
