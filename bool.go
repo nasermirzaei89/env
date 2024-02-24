@@ -12,11 +12,7 @@ func GetBool(key string, def bool) bool {
 		return def
 	}
 
-	if s == "" || s == "1" || s == "true" {
-		return true
-	}
-
-	return false
+	return s == "" || s == "1" || s == "true"
 }
 
 // MustGetBool extracts bool value from env. if not set, it panics.
@@ -26,9 +22,5 @@ func MustGetBool(key string) bool {
 		panic(fmt.Sprintf("environment variable '%s' has not been set", key))
 	}
 
-	if s == "" || s == "1" || s == "true" {
-		return true
-	}
-
-	return false
+	return s == "" || s == "1" || s == "true"
 }
