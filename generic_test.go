@@ -557,6 +557,7 @@ func TestGet(t *testing.T) {
 			res := env.Get("V1", def)
 			assert.Equal(t, def, res)
 		})
+
 		t.Run("GetValidUIntSliceWithDefault", func(t *testing.T) {
 			expected := []uint{31, 32, 33}
 
@@ -565,12 +566,14 @@ func TestGet(t *testing.T) {
 			res := env.Get("V1", def)
 			assert.Equal(t, expected, res)
 		})
+
 		t.Run("GetInvalidUIntSliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
 			res := env.Get("V1", def)
 			assert.Equal(t, def, res)
 		})
+
 		t.Run("GetEmptyUIntSliceWithDefault", func(t *testing.T) {
 			expected := make([]uint, 0)
 

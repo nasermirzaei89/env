@@ -10,22 +10,30 @@ import (
 func TestGetString(t *testing.T) {
 	def := "v1_default"
 
-	res := env.GetString("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentStringWithDefault", func(t *testing.T) {
+		res := env.GetString("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "val")
+	t.Run("GetValidStringWithDefault", func(t *testing.T) {
+		t.Setenv("V1", "val")
 
-	res = env.GetString("V1", def)
-	assert.Equal(t, "val", res)
+		res := env.GetString("V1", def)
+		assert.Equal(t, "val", res)
+	})
 }
 
 func TestMustGetString(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetString("V1")
+	t.Run("MustGetAbsentString", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetString("V1")
+		})
 	})
 
-	t.Setenv("V1", "val")
+	t.Run("MustGetValidString", func(t *testing.T) {
+		t.Setenv("V1", "val")
 
-	res := env.MustGetString("V1")
-	assert.Equal(t, "val", res)
+		res := env.MustGetString("V1")
+		assert.Equal(t, "val", res)
+	})
 }

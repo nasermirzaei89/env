@@ -10,51 +10,67 @@ import (
 func TestGetUint64Slice(t *testing.T) {
 	def := []uint64{21, 22}
 
-	res := env.GetUint64Slice("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentUInt64SliceWithDefault", func(t *testing.T) {
+		res := env.GetUint64Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []uint64{31, 32, 33}
+	t.Run("GetValidUInt64SliceWithDefault", func(t *testing.T) {
+		expected := []uint64{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res = env.GetUint64Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint64Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	t.Setenv("V1", "1,2,Three")
+	t.Run("GetInvalidUInt64SliceWithDefault", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	res = env.GetUint64Slice("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetUint64Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected = []uint64{}
+	t.Run("GetEmptyUInt64SliceWithDefault", func(t *testing.T) {
+		expected := make([]uint64, 0)
 
-	t.Setenv("V1", "")
+		t.Setenv("V1", "")
 
-	res = env.GetUint64Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint64Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetUint64Slice(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetUint64Slice("V1")
+	t.Run("MustGetAbsentUInt64Slice", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetUint64Slice("V1")
+		})
 	})
 
-	expected := []uint64{31, 32, 33}
+	t.Run("MustGetValidUInt64Slice", func(t *testing.T) {
+		expected := []uint64{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res := env.MustGetUint64Slice("V1")
-	assert.Equal(t, expected, res)
-
-	t.Setenv("V1", "1,2,Three")
-
-	assert.Panics(t, func() {
-		env.MustGetUint64Slice("V1")
+		res := env.MustGetUint64Slice("V1")
+		assert.Equal(t, expected, res)
 	})
 
-	expected = []uint64{}
+	t.Run("MustGetInvalidUInt64Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	t.Setenv("V1", "")
+		assert.Panics(t, func() {
+			env.MustGetUint64Slice("V1")
+		})
+	})
 
-	res = env.MustGetUint64Slice("V1")
-	assert.Equal(t, expected, res)
+	t.Run("MustGetEmptyUInt64Slice", func(t *testing.T) {
+		expected := make([]uint64, 0)
+
+		t.Setenv("V1", "")
+
+		res := env.MustGetUint64Slice("V1")
+		assert.Equal(t, expected, res)
+	})
 }

@@ -11,36 +11,48 @@ import (
 func TestGetStringSlice(t *testing.T) {
 	def := []string{"foo", "bar"}
 
-	res := env.GetStringSlice("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentStringSliceWithDefault", func(t *testing.T) {
+		res := env.GetStringSlice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []string{"foo", "bar", "baz"}
-	t.Setenv("V1", strings.Join(expected, ","))
+	t.Run("GetValidStringSliceWithDefault", func(t *testing.T) {
+		expected := []string{"foo", "bar", "baz"}
+		t.Setenv("V1", strings.Join(expected, ","))
 
-	res = env.GetStringSlice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetStringSlice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	expected = []string{}
-	t.Setenv("V1", strings.Join(expected, ","))
+	t.Run("GetEmptyStringSliceWithDefault", func(t *testing.T) {
+		expected := make([]string, 0)
+		t.Setenv("V1", strings.Join(expected, ","))
 
-	res = env.GetStringSlice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetStringSlice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetStringSlice(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetStringSlice("V1")
+	t.Run("MustGetAbsentStringSlice", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetStringSlice("V1")
+		})
 	})
 
-	expected := []string{"foo", "bar", "baz"}
-	t.Setenv("V1", strings.Join(expected, ","))
+	t.Run("MustGetValidStringSlice", func(t *testing.T) {
+		expected := []string{"foo", "bar", "baz"}
+		t.Setenv("V1", strings.Join(expected, ","))
 
-	res := env.MustGetStringSlice("V1")
-	assert.Equal(t, expected, res)
+		res := env.MustGetStringSlice("V1")
+		assert.Equal(t, expected, res)
+	})
 
-	expected = []string{}
-	t.Setenv("V1", strings.Join(expected, ","))
+	t.Run("MustGetEmptyStringSlice", func(t *testing.T) {
+		expected := make([]string, 0)
+		t.Setenv("V1", strings.Join(expected, ","))
 
-	res = env.MustGetStringSlice("V1")
-	assert.Equal(t, expected, res)
+		res := env.MustGetStringSlice("V1")
+		assert.Equal(t, expected, res)
+	})
 }

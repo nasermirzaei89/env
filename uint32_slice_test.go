@@ -10,51 +10,67 @@ import (
 func TestGetUint32Slice(t *testing.T) {
 	def := []uint32{21, 22}
 
-	res := env.GetUint32Slice("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentUInt32SliceWithDefault", func(t *testing.T) {
+		res := env.GetUint32Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []uint32{31, 32, 33}
+	t.Run("GetValidUInt32SliceWithDefault", func(t *testing.T) {
+		expected := []uint32{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res = env.GetUint32Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint32Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	t.Setenv("V1", "1,2,Three")
+	t.Run("GetInvalidUInt32SliceWithDefault", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	res = env.GetUint32Slice("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetUint32Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected = []uint32{}
+	t.Run("GetEmptyUInt32SliceWithDefault", func(t *testing.T) {
+		expected := make([]uint32, 0)
 
-	t.Setenv("V1", "")
+		t.Setenv("V1", "")
 
-	res = env.GetUint32Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint32Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetUint32Slice(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetUint32Slice("V1")
+	t.Run("MustGetAbsentUInt32Slice", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetUint32Slice("V1")
+		})
 	})
 
-	expected := []uint32{31, 32, 33}
+	t.Run("MustGetValidUInt32Slice", func(t *testing.T) {
+		expected := []uint32{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res := env.MustGetUint32Slice("V1")
-	assert.Equal(t, expected, res)
-
-	t.Setenv("V1", "1,2,Three")
-
-	assert.Panics(t, func() {
-		env.MustGetUint32Slice("V1")
+		res := env.MustGetUint32Slice("V1")
+		assert.Equal(t, expected, res)
 	})
 
-	expected = []uint32{}
+	t.Run("MustGetInvalidUInt32Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	t.Setenv("V1", "")
+		assert.Panics(t, func() {
+			env.MustGetUint32Slice("V1")
+		})
+	})
 
-	res = env.MustGetUint32Slice("V1")
-	assert.Equal(t, expected, res)
+	t.Run("MustGetEmptyUInt32Slice", func(t *testing.T) {
+		expected := make([]uint32, 0)
+
+		t.Setenv("V1", "")
+
+		res := env.MustGetUint32Slice("V1")
+		assert.Equal(t, expected, res)
+	})
 }

@@ -10,32 +10,44 @@ import (
 func TestGetUint64(t *testing.T) {
 	def := uint64(12)
 
-	res := env.GetUint64("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentUInt64WithDefault", func(t *testing.T) {
+		res := env.GetUint64("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "invalid")
+	t.Run("GetInvalidUInt64WithDefault", func(t *testing.T) {
+		t.Setenv("V1", "invalid")
 
-	res = env.GetUint64("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetUint64("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "14")
+	t.Run("GetValidUInt64WithDefault", func(t *testing.T) {
+		t.Setenv("V1", "14")
 
-	res = env.GetUint64("V1", def)
-	assert.Equal(t, uint64(14), res)
+		res := env.GetUint64("V1", def)
+		assert.Equal(t, uint64(14), res)
+	})
 }
 
 func TestMustGetUint64(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetUint64("V1")
+	t.Run("MustGetAbsentUInt64", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetUint64("V1")
+		})
 	})
 
-	assert.Panics(t, func() {
-		t.Setenv("V1", "invalid")
-		env.MustGetUint64("V1")
+	t.Run("MustGetInvalidUInt64", func(t *testing.T) {
+		assert.Panics(t, func() {
+			t.Setenv("V1", "invalid")
+			env.MustGetUint64("V1")
+		})
 	})
 
-	t.Setenv("V1", "14")
+	t.Run("MustGetValidUInt64", func(t *testing.T) {
+		t.Setenv("V1", "14")
 
-	res := env.MustGetUint64("V1")
-	assert.Equal(t, uint64(14), res)
+		res := env.MustGetUint64("V1")
+		assert.Equal(t, uint64(14), res)
+	})
 }

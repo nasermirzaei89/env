@@ -10,51 +10,67 @@ import (
 func TestGetUint8Slice(t *testing.T) {
 	def := []uint8{21, 22}
 
-	res := env.GetUint8Slice("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentUInt8SliceWithDefault", func(t *testing.T) {
+		res := env.GetUint8Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []uint8{31, 32, 33}
+	t.Run("GetValidUInt8SliceWithDefault", func(t *testing.T) {
+		expected := []uint8{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res = env.GetUint8Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint8Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	t.Setenv("V1", "1,2,Three")
+	t.Run("GetInvalidUInt8SliceWithDefault", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	res = env.GetUint8Slice("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetUint8Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected = []uint8{}
+	t.Run("GetInvalidUInt8SliceWithDefault2", func(t *testing.T) {
+		expected := make([]uint8, 0)
 
-	t.Setenv("V1", "")
+		t.Setenv("V1", "")
 
-	res = env.GetUint8Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetUint8Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetUint8Slice(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetUint8Slice("V1")
+	t.Run("MustGetAbsentUInt8Slice", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetUint8Slice("V1")
+		})
 	})
 
-	expected := []uint8{31, 32, 33}
+	t.Run("MustGetValidUInt8Slice", func(t *testing.T) {
+		expected := []uint8{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res := env.MustGetUint8Slice("V1")
-	assert.Equal(t, expected, res)
-
-	t.Setenv("V1", "1,2,Three")
-
-	assert.Panics(t, func() {
-		env.MustGetUint8Slice("V1")
+		res := env.MustGetUint8Slice("V1")
+		assert.Equal(t, expected, res)
 	})
 
-	expected = []uint8{}
+	t.Run("MustGetInvalidUInt8Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	t.Setenv("V1", "")
+		assert.Panics(t, func() {
+			env.MustGetUint8Slice("V1")
+		})
+	})
 
-	res = env.MustGetUint8Slice("V1")
-	assert.Equal(t, expected, res)
+	t.Run("MustGetEmptyUInt8Slice", func(t *testing.T) {
+		expected := make([]uint8, 0)
+
+		t.Setenv("V1", "")
+
+		res := env.MustGetUint8Slice("V1")
+		assert.Equal(t, expected, res)
+	})
 }

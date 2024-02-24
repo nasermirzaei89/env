@@ -10,51 +10,67 @@ import (
 func TestGetInt16Slice(t *testing.T) {
 	def := []int16{21, 22}
 
-	res := env.GetInt16Slice("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentInt16SliceWithDefault", func(t *testing.T) {
+		res := env.GetInt16Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []int16{31, 32, 33}
+	t.Run("GetValidInt16SliceWithDefault", func(t *testing.T) {
+		expected := []int16{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res = env.GetInt16Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetInt16Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	t.Setenv("V1", "1,2,Three")
+	t.Run("GetInvalidInt16SliceWithDefault", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	res = env.GetInt16Slice("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetInt16Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected = []int16{}
+	t.Run("GetEmptyInt16SliceWithDefault", func(t *testing.T) {
+		expected := make([]int16, 0)
 
-	t.Setenv("V1", "")
+		t.Setenv("V1", "")
 
-	res = env.GetInt16Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetInt16Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetInt16Slice(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetInt16Slice("V1")
+	t.Run("MustGetAbsentInt16Slice", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetInt16Slice("V1")
+		})
 	})
 
-	expected := []int16{31, 32, 33}
+	t.Run("MustGetValidInt16Slice", func(t *testing.T) {
+		expected := []int16{31, 32, 33}
 
-	t.Setenv("V1", "31,32,33")
+		t.Setenv("V1", "31,32,33")
 
-	res := env.MustGetInt16Slice("V1")
-	assert.Equal(t, expected, res)
-
-	t.Setenv("V1", "1,2,Three")
-
-	assert.Panics(t, func() {
-		env.MustGetInt16Slice("V1")
+		res := env.MustGetInt16Slice("V1")
+		assert.Equal(t, expected, res)
 	})
 
-	expected = []int16{}
+	t.Run("MustGetInvalidInt16Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
 
-	t.Setenv("V1", "")
+		assert.Panics(t, func() {
+			env.MustGetInt16Slice("V1")
+		})
+	})
 
-	res = env.MustGetInt16Slice("V1")
-	assert.Equal(t, expected, res)
+	t.Run("MustGetEmptyInt16Slice", func(t *testing.T) {
+		expected := make([]int16, 0)
+
+		t.Setenv("V1", "")
+
+		res := env.MustGetInt16Slice("V1")
+		assert.Equal(t, expected, res)
+	})
 }

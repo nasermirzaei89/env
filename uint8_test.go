@@ -10,32 +10,44 @@ import (
 func TestGetUint8(t *testing.T) {
 	def := uint8(12)
 
-	res := env.GetUint8("V1", def)
-	assert.Equal(t, def, res)
+	t.Run("GetAbsentUInt8WithDefault", func(t *testing.T) {
+		res := env.GetUint8("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "invalid")
+	t.Run("GetInvalidUInt8WithDefault", func(t *testing.T) {
+		t.Setenv("V1", "invalid")
 
-	res = env.GetUint8("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetUint8("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "14")
+	t.Run("GetValidUInt8WithDefault", func(t *testing.T) {
+		t.Setenv("V1", "14")
 
-	res = env.GetUint8("V1", def)
-	assert.Equal(t, uint8(14), res)
+		res := env.GetUint8("V1", def)
+		assert.Equal(t, uint8(14), res)
+	})
 }
 
 func TestMustGetUint8(t *testing.T) {
-	assert.Panics(t, func() {
-		env.MustGetUint8("V1")
+	t.Run("MustGetAbsentUInt8", func(t *testing.T) {
+		assert.Panics(t, func() {
+			env.MustGetUint8("V1")
+		})
 	})
 
-	assert.Panics(t, func() {
-		t.Setenv("V1", "invalid")
-		env.MustGetUint8("V1")
+	t.Run("MustGetInvalidUInt8", func(t *testing.T) {
+		assert.Panics(t, func() {
+			t.Setenv("V1", "invalid")
+			env.MustGetUint8("V1")
+		})
 	})
 
-	t.Setenv("V1", "14")
+	t.Run("MustGetValidUInt8", func(t *testing.T) {
+		t.Setenv("V1", "14")
 
-	res := env.MustGetUint8("V1")
-	assert.Equal(t, uint8(14), res)
+		res := env.MustGetUint8("V1")
+		assert.Equal(t, uint8(14), res)
+	})
 }
