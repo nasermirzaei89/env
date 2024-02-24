@@ -8,29 +8,41 @@ import (
 )
 
 func TestGetFloat32Slice(t *testing.T) {
-	def := []float32{21.2, 22.3}
+	t.Run("GetAbsentFloat32SliceWithDefault", func(t *testing.T) {
+		def := []float32{21.2, 22.3}
 
-	res := env.GetFloat32Slice("V1", def)
-	assert.Equal(t, def, res)
+		res := env.GetFloat32Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	expected := []float32{31.02, 32.33, 33.33}
+	t.Run("GetValidFloat32SliceWithDefault", func(t *testing.T) {
+		def := []float32{21.2, 22.3}
+		expected := []float32{31.02, 32.33, 33.33}
 
-	t.Setenv("V1", "31.02,32.33,33.33")
+		t.Setenv("V1", "31.02,32.33,33.33")
 
-	res = env.GetFloat32Slice("V1", def)
-	assert.Equal(t, expected, res)
+		res := env.GetFloat32Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 
-	t.Setenv("V1", "1.2,2.3,Three")
+	t.Run("GetInvalidFloat32SliceWithDefault", func(t *testing.T) {
+		def := []float32{21.2, 22.3}
 
-	res = env.GetFloat32Slice("V1", def)
-	assert.Equal(t, def, res)
+		t.Setenv("V1", "1.2,2.3,Three")
 
-	expected = []float32{}
+		res := env.GetFloat32Slice("V1", def)
+		assert.Equal(t, def, res)
+	})
 
-	t.Setenv("V1", "")
+	t.Run("GetEmptyFloat32SliceWithDefault", func(t *testing.T) {
+		def := []float32{21.2, 22.3}
+		expected := make([]float32, 0)
 
-	res = env.GetFloat32Slice("V1", def)
-	assert.Equal(t, expected, res)
+		t.Setenv("V1", "")
+
+		res := env.GetFloat32Slice("V1", def)
+		assert.Equal(t, expected, res)
+	})
 }
 
 func TestMustGetFloat32Slice(t *testing.T) {

@@ -39,6 +39,20 @@ func main() {
 
 	s := env.GetString("B", "hi")
 	fmt.Println(s) // hi (default)
+
+	// Generics
+
+	b2 := env.Get("A", true)
+	fmt.Println(b2) // true (default)
+
+	f2 := env.Get("B", 14.5)
+	fmt.Println(f2) // 14.5 (default)
+
+	i2 := env.Get("C", 12)
+	fmt.Println(i2) // 12 (default)
+
+	s2 := env.Get("B", "hi")
+	fmt.Println(s2) // hi (default)
 }
 ```
 
@@ -58,6 +72,13 @@ func main() {
 	fmt.Println(s) // /Users/nasermirzaei89
 
 	s = env.MustGetString("NEW") // panics
+
+	// Generics
+
+	s2 := env.MustGet[string]("HOME")
+	fmt.Println(s2) // /Users/nasermirzaei89
+
+	s2 = env.MustGet[string]("NEW") // panics
 }
 ```
 
