@@ -1,6 +1,8 @@
 package env_test
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/nasermirzaei89/env"
@@ -14,6 +16,13 @@ func TestEnv_String(t *testing.T) {
 
 	res := env.Environment()
 	assert.EqualValues(t, v, res)
+}
+
+func ExampleEnvironment() {
+	_ = os.Setenv("ENV", "testing")
+
+	fmt.Println(env.Environment())
+	// Output: testing
 }
 
 func TestEnvironment(t *testing.T) {
@@ -42,6 +51,13 @@ func TestIs(t *testing.T) {
 
 		assert.True(t, env.Is(env.Testing, env.Development))
 	})
+}
+
+func ExampleIs() {
+	_ = os.Setenv("ENV", "testing")
+
+	fmt.Println(env.Is(env.Testing))
+	// Output: true
 }
 
 func TestIsDevelopment(t *testing.T) {

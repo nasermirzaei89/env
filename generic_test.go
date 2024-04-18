@@ -1,6 +1,8 @@
 package env_test
 
 import (
+	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -821,6 +823,41 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func ExampleGet_string() {
+	_ = os.Setenv("V1", "val")
+
+	fmt.Println(env.Get("V1", "default"))
+	// Output: val
+}
+
+func ExampleGet_stringSlice() {
+	_ = os.Setenv("V1", "foo,bar,baz")
+
+	fmt.Println(env.Get("V1", []string{"default"}))
+	// Output: [foo bar baz]
+}
+
+func ExampleGet_int() {
+	_ = os.Setenv("V1", "14")
+
+	fmt.Println(env.Get("V1", 12))
+	// Output: 14
+}
+
+func ExampleGet_intSlice() {
+	_ = os.Setenv("V1", "31,32,33")
+
+	fmt.Println(env.Get("V1", []int{21}))
+	// Output: [31 32 33]
+}
+
+func ExampleGet_bool() {
+	_ = os.Setenv("V1", "true")
+
+	fmt.Println(env.Get("V1", false))
+	// Output: true
+}
+
 func TestMustGet(t *testing.T) {
 	// bool
 	{
@@ -1598,4 +1635,39 @@ func TestMustGet(t *testing.T) {
 			assert.Equal(t, expected, res)
 		})
 	}
+}
+
+func ExampleMustGet_string() {
+	_ = os.Setenv("V1", "val")
+
+	fmt.Println(env.MustGet[string]("V1"))
+	// Output: val
+}
+
+func ExampleMustGet_stringSlice() {
+	_ = os.Setenv("V1", "foo,bar,baz")
+
+	fmt.Println(env.MustGet[[]string]("V1"))
+	// Output: [foo bar baz]
+}
+
+func ExampleMustGet_int() {
+	_ = os.Setenv("V1", "14")
+
+	fmt.Println(env.MustGet[int]("V1"))
+	// Output: 14
+}
+
+func ExampleMustGet_intSlice() {
+	_ = os.Setenv("V1", "31,32,33")
+
+	fmt.Println(env.MustGet[[]int]("V1"))
+	// Output: [31 32 33]
+}
+
+func ExampleMustGet_bool() {
+	_ = os.Setenv("V1", "true")
+
+	fmt.Println(env.MustGet[bool]("V1"))
+	// Output: true
 }
