@@ -6,6 +6,7 @@ Golang Get Environment Variables Package
 [![Go Report Card](https://goreportcard.com/badge/github.com/nasermirzaei89/env)](https://goreportcard.com/report/github.com/nasermirzaei89/env)
 [![Codecov](https://codecov.io/gh/nasermirzaei89/env/branch/master/graph/badge.svg)](https://codecov.io/gh/nasermirzaei89/env)
 [![Go Reference](https://pkg.go.dev/badge/github.com/nasermirzaei89/env.svg)](https://pkg.go.dev/github.com/nasermirzaei89/env)
+[![awesome-go](https://awesome.re/badge.svg)](https://github.com/avelino/awesome-go#configuration)
 [![License](https://img.shields.io/github/license/nasermirzaei89/env)](https://raw.githubusercontent.com/nasermirzaei89/env/master/LICENSE)
 
 ## Install
