@@ -6,16 +6,6 @@ run:
 linters:
   enable-all: true
   disable:
-    - interfacer # deprecated
-    - structcheck # deprecated
-    - nosnakecase # deprecated
-    - golint # deprecated
-    - varcheck # deprecated
-    - exhaustivestruct # deprecated
-    - deadcode # deprecated
-    - ifshort # deprecated
-    - scopelint # deprecated
-    - maligned # deprecated
     - varnamelen
     - dupl
     - paralleltest
@@ -25,3 +15,8 @@ linters:
     - maintidx
     - cyclop
     - ireturn
+    - execinquery
+    - gomnd
+    - exportloopref
+    - copyloopvar
+    - intrange
