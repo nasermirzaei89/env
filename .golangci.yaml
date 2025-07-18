@@ -1,22 +1,28 @@
+version: "2"
 run:
-  timeout: 5m
-  tests: true
   modules-download-mode: readonly
-
+  tests: true
 linters:
-  enable-all: true
+  default: all
   disable:
-    - varnamelen
-    - dupl
-    - paralleltest
-    - depguard
-    - forcetypeassert
-    - funlen
-    - maintidx
-    - cyclop
-    - ireturn
-    - execinquery
-    - gomnd
-    - exportloopref
-    - copyloopvar
-    - intrange
+  - wsl
+  - copyloopvar
+  - intrange
+  - cyclop
+  - depguard
+  - dupl
+  - forcetypeassert
+  - funlen
+  - nlreturn
+  - ireturn
+  - maintidx
+  - nonamedreturns
+  - paralleltest
+  - revive
+  - varnamelen
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports

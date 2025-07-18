@@ -38,6 +38,7 @@ func assertEqualSlices[T comparable](t *testing.T, expected, actual []T) {
 
 	if len(actual) == len(expected) {
 		equal = true
+
 		for i := range actual {
 			if actual[i] != expected[i] {
 				equal = false
@@ -66,12 +67,14 @@ func didPanic(f func()) (funcDidPanic bool, message any, stack string) {
 
 	defer func() {
 		message = recover()
+
 		if funcDidPanic {
 			stack = string(debug.Stack())
 		}
 	}()
 
 	f()
+
 	funcDidPanic = false
 
 	return
