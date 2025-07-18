@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nasermirzaei89/env"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetInt8Slice(t *testing.T) {
@@ -12,7 +11,7 @@ func TestGetInt8Slice(t *testing.T) {
 		def := []int8{21, 22}
 
 		res := env.GetInt8Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetValidInt8SliceWithDefault", func(t *testing.T) {
@@ -22,7 +21,7 @@ func TestGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.GetInt8Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("GetInvalidInt8SliceWithDefault", func(t *testing.T) {
@@ -31,7 +30,7 @@ func TestGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
 		res := env.GetInt8Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetInvalidInt8SliceWithDefault2", func(t *testing.T) {
@@ -40,7 +39,7 @@ func TestGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
 		res := env.GetInt8Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetEmptyInt8SliceWithDefault", func(t *testing.T) {
@@ -50,13 +49,13 @@ func TestGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.GetInt8Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }
 
 func TestMustGetInt8Slice(t *testing.T) {
 	t.Run("MustGetAbsentInt8Slice", func(t *testing.T) {
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetInt8Slice("V1")
 		})
 	})
@@ -67,13 +66,13 @@ func TestMustGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.MustGetInt8Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("MustGetInvalidInt8Slice", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetInt8Slice("V1")
 		})
 	})
@@ -84,6 +83,6 @@ func TestMustGetInt8Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.MustGetInt8Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }

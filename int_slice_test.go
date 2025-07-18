@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nasermirzaei89/env"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetIntSlice(t *testing.T) {
@@ -12,7 +11,7 @@ func TestGetIntSlice(t *testing.T) {
 
 	t.Run("GetAbsentIntSliceWithDefault", func(t *testing.T) {
 		res := env.GetIntSlice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetValidIntSliceWithDefault", func(t *testing.T) {
@@ -21,14 +20,14 @@ func TestGetIntSlice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.GetIntSlice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("GetInvalidIntSliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
 		res := env.GetIntSlice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetEmptyIntSliceWithDefault", func(t *testing.T) {
@@ -37,13 +36,13 @@ func TestGetIntSlice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.GetIntSlice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }
 
 func TestMustGetIntSlice(t *testing.T) {
 	t.Run("MustGetAbsentIntSlice", func(t *testing.T) {
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetIntSlice("V1")
 		})
 	})
@@ -54,13 +53,13 @@ func TestMustGetIntSlice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.MustGetIntSlice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("MustGetInvalidIntSlice", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetIntSlice("V1")
 		})
 	})
@@ -71,6 +70,6 @@ func TestMustGetIntSlice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.MustGetIntSlice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nasermirzaei89/env"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetInt64Slice(t *testing.T) {
@@ -12,7 +11,7 @@ func TestGetInt64Slice(t *testing.T) {
 
 	t.Run("GetAbsentInt64SliceWithDefault", func(t *testing.T) {
 		res := env.GetInt64Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetValidInt64SliceWithDefault", func(t *testing.T) {
@@ -21,14 +20,14 @@ func TestGetInt64Slice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.GetInt64Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("GetInvalidInt64SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
 		res := env.GetInt64Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetEmptyInt64SliceWithDefault", func(t *testing.T) {
@@ -37,13 +36,13 @@ func TestGetInt64Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.GetInt64Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }
 
 func TestMustGetInt64Slice(t *testing.T) {
 	t.Run("MustGetAbsentInt64Slice", func(t *testing.T) {
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetInt64Slice("V1")
 		})
 	})
@@ -54,13 +53,13 @@ func TestMustGetInt64Slice(t *testing.T) {
 		t.Setenv("V1", "31,32,33")
 
 		res := env.MustGetInt64Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("MustGetInvalidInt64Slice", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetInt64Slice("V1")
 		})
 	})
@@ -71,6 +70,6 @@ func TestMustGetInt64Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.MustGetInt64Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }

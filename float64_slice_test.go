@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nasermirzaei89/env"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFloat64Slice(t *testing.T) {
@@ -12,7 +11,7 @@ func TestGetFloat64Slice(t *testing.T) {
 
 	t.Run("GetAbsentFloat64SliceWithDefault", func(t *testing.T) {
 		res := env.GetFloat64Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetValidFloat64SliceWithDefault", func(t *testing.T) {
@@ -21,14 +20,14 @@ func TestGetFloat64Slice(t *testing.T) {
 		t.Setenv("V1", "31.02,32.33,33.33")
 
 		res := env.GetFloat64Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("GetInvalidFloat64SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1.2,2.3,Three")
 
 		res := env.GetFloat64Slice("V1", def)
-		assert.Equal(t, def, res)
+		assertEqualSlices(t, def, res)
 	})
 
 	t.Run("GetEmptyFloat64SliceWithDefault", func(t *testing.T) {
@@ -37,13 +36,13 @@ func TestGetFloat64Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.GetFloat64Slice("V1", def)
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }
 
 func TestMustGetFloat64Slice(t *testing.T) {
 	t.Run("MustGetAbsentFloat64Slice", func(t *testing.T) {
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetFloat64Slice("V1")
 		})
 	})
@@ -54,13 +53,13 @@ func TestMustGetFloat64Slice(t *testing.T) {
 		t.Setenv("V1", "31.02,32.33,33.33")
 
 		res := env.MustGetFloat64Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 
 	t.Run("MustGetInvalidFloat64Slice", func(t *testing.T) {
 		t.Setenv("V1", "1.2,2.3,Three")
 
-		assert.Panics(t, func() {
+		assertPanics(t, func() {
 			env.MustGetFloat64Slice("V1")
 		})
 	})
@@ -71,6 +70,6 @@ func TestMustGetFloat64Slice(t *testing.T) {
 		t.Setenv("V1", "")
 
 		res := env.MustGetFloat64Slice("V1")
-		assert.Equal(t, expected, res)
+		assertEqualSlices(t, expected, res)
 	})
 }
