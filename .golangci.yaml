@@ -5,21 +5,21 @@ run:
 linters:
   default: all
   disable:
-  - wsl
-  - copyloopvar
-  - intrange
-  - cyclop
-  - depguard
-  - dupl
-  - forcetypeassert
-  - funlen
-  - nlreturn
-  - ireturn
-  - maintidx
-  - nonamedreturns
-  - paralleltest
-  - revive
-  - varnamelen
+    - wsl
+    - copyloopvar
+    - intrange
+    - cyclop
+    - depguard
+    - dupl
+    - forcetypeassert
+    - funlen
+    - nlreturn
+    - ireturn
+    - maintidx
+    - nonamedreturns
+    - paralleltest
+    - revive
+    - varnamelen
 formatters:
   enable:
     - gci
