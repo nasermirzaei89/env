@@ -24,19 +24,19 @@ func TestNotSetError(t *testing.T) {
 
 func TestInvalidValueError(t *testing.T) {
 	t.Run("ErrorMessage", func(t *testing.T) {
-		inner := errors.New("some parse error")
+		inner := errors.New("some parse error") //nolint:err113
 		invalidValueErr := env.InvalidValueError{Key: "MY_VAR", Value: "bad", Err: inner}
 		assertEqual(t, `environment variable "MY_VAR" has an invalid value: "bad"`, invalidValueErr.Error())
 	})
 
 	t.Run("Unwrap", func(t *testing.T) {
-		inner := errors.New("some parse error")
+		inner := errors.New("some parse error") //nolint:err113
 		invalidValueErr := env.InvalidValueError{Key: "MY_VAR", Value: "bad", Err: inner}
 		assertTrue(t, errors.Is(invalidValueErr, inner))
 	})
 
 	t.Run("ErrorsAs", func(t *testing.T) {
-		inner := errors.New("some parse error")
+		inner := errors.New("some parse error") //nolint:err113
 		err := error(env.InvalidValueError{Key: "MY_VAR", Value: "bad", Err: inner})
 
 		var invalidValueErr env.InvalidValueError

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Type is a constraint that includes all supported types by env package.
 type Type interface {
 	bool |
 		float32 | []float32 | float64 | []float64 |
@@ -132,5 +133,5 @@ func Lookup[T Type](key string) (res T, err error) {
 		res, err = any(r).(T), e
 	}
 
-	return
+	return //nolint:nakedret
 }

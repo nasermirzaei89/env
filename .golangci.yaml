@@ -8,17 +8,17 @@ linters:
     - wsl
     - copyloopvar
     - intrange
+    - gomodguard
+    - goconst
     - cyclop
     - depguard
     - dupl
     - forcetypeassert
     - funlen
-    - nlreturn
     - ireturn
     - maintidx
     - nonamedreturns
     - paralleltest
-    - revive
     - varnamelen
 formatters:
   enable:
