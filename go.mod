@@ -1,3 +1,3 @@
 module github.com/nasermirzaei89/env
 
-go 1.18
+go 1.21

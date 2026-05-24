@@ -1,2 +1,6 @@
+# Editor files
 .idea/
+.vscode/
+
+# Go
 coverage.out

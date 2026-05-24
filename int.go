@@ -1,36 +1,47 @@
 package env
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strconv"
 )
 
-// GetInt extracts int value from env. if not set, returns default value.
-func GetInt(key string, def int) int {
+// LookupInt extracts int value from env. If not set, returns NotSetError.
+// If the value cannot be parsed, returns InvalidValueError.
+func LookupInt(key string) (int, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		return def
+		return 0, NotSetError{Key: key}
 	}
 
 	v, err := strconv.Atoi(s)
 	if err != nil {
-		return def
+		return 0, InvalidValueError{Key: key, Value: s, Err: err}
 	}
 
-	return v
+	return v, nil
 }
 
-// MustGetInt extracts int value from env. if not set, it panics.
-func MustGetInt(key string) int {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+// GetInt extracts int value from env. If not set, returns default value.
+func GetInt(key string, def int) int {
+	v, err := LookupInt(key)
+	if err == nil {
+		return v
 	}
 
-	v, err := strconv.Atoi(s)
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
+		return def
+	}
+
+	panic(err)
+}
+
+// MustGetInt extracts int value from env. If not set, it panics.
+func MustGetInt(key string) int {
+	v, err := LookupInt(key)
 	if err != nil {
-		panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+		panic(err)
 	}
 
 	return v

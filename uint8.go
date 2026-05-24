@@ -1,37 +1,48 @@
 package env
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strconv"
 )
 
-// GetUint8 extracts uint8 value from env. if not set, returns default value.
-func GetUint8(key string, def uint8) uint8 {
+// LookupUint8 extracts uint8 value from env. If not set, returns NotSetError.
+// If the value cannot be parsed, returns InvalidValueError.
+func LookupUint8(key string) (uint8, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		return def
+		return 0, NotSetError{Key: key}
 	}
 
 	v, err := strconv.ParseUint(s, decimalBase, bitSize8)
 	if err != nil {
-		return def
+		return 0, InvalidValueError{Key: key, Value: s, Err: err}
 	}
 
-	return uint8(v)
+	return uint8(v), nil
 }
 
-// MustGetUint8 extracts uint8 value from env. if not set, it panics.
+// GetUint8 extracts uint8 value from env. If not set, returns default value.
+func GetUint8(key string, def uint8) uint8 {
+	v, err := LookupUint8(key)
+	if err == nil {
+		return v
+	}
+
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
+		return def
+	}
+
+	panic(err)
+}
+
+// MustGetUint8 extracts uint8 value from env. If not set, it panics.
 func MustGetUint8(key string) uint8 {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
-	}
-
-	v, err := strconv.ParseUint(s, decimalBase, bitSize8)
+	v, err := LookupUint8(key)
 	if err != nil {
-		panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+		panic(err)
 	}
 
-	return uint8(v)
+	return v
 }

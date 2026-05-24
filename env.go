@@ -1,7 +1,9 @@
+// Package env provides functions to work with environment variables.
 package env
 
 import (
 	"os"
+	"slices"
 )
 
 // Env type.
@@ -13,14 +15,6 @@ const (
 	Testing     Env = "testing"
 	Staging     Env = "staging"
 	Production  Env = "production"
-)
-
-const (
-	decimalBase = 10
-	bitSize8    = 8
-	bitSize16   = 16
-	bitSize32   = 32
-	bitSize64   = 64
 )
 
 // Environment returns ENV value in environment variables.
@@ -36,13 +30,7 @@ func Is(e1 Env, ee ...Env) bool {
 		return true
 	}
 
-	for i := range ee {
-		if ee[i] == ce {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(ee, ce)
 }
 
 // IsDevelopment checks whether ENV is development or not.

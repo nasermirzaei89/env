@@ -1,141 +1,137 @@
 package env
 
 import (
-	"fmt"
+	"errors"
+	"time"
 )
 
+// Type is a constraint that includes all supported types by env package.
 type Type interface {
 	bool |
 		float32 | []float32 | float64 | []float64 |
 		int | []int | int8 | []int8 | int16 | []int16 | int32 | []int32 | int64 | []int64 |
 		string | []string |
+		time.Duration |
 		uint | []uint | uint8 | []uint8 | uint16 | []uint16 | uint32 | []uint32 | uint64 | []uint64
 }
 
-// Get extracts value from env based on its type. if not set, returns default value.
+// Get extracts value from env based on its type. If not set, returns default value.
 func Get[T Type](key string, def T) T {
-	var v T
-
-	switch t := any(v).(type) {
-	case bool:
-		return any(GetBool(key, any(def).(bool))).(T)
-	case float32:
-		return any(GetFloat32(key, any(def).(float32))).(T)
-	case []float32:
-		return any(GetFloat32Slice(key, any(def).([]float32))).(T)
-	case float64:
-		return any(GetFloat64(key, any(def).(float64))).(T)
-	case []float64:
-		return any(GetFloat64Slice(key, any(def).([]float64))).(T)
-	case int:
-		return any(GetInt(key, any(def).(int))).(T)
-	case []int:
-		return any(GetIntSlice(key, any(def).([]int))).(T)
-	case int8:
-		return any(GetInt8(key, any(def).(int8))).(T)
-	case []int8:
-		return any(GetInt8Slice(key, any(def).([]int8))).(T)
-	case int16:
-		return any(GetInt16(key, any(def).(int16))).(T)
-	case []int16:
-		return any(GetInt16Slice(key, any(def).([]int16))).(T)
-	case int32:
-		return any(GetInt32(key, any(def).(int32))).(T)
-	case []int32:
-		return any(GetInt32Slice(key, any(def).([]int32))).(T)
-	case int64:
-		return any(GetInt64(key, any(def).(int64))).(T)
-	case []int64:
-		return any(GetInt64Slice(key, any(def).([]int64))).(T)
-	case string:
-		return any(GetString(key, any(def).(string))).(T)
-	case []string:
-		return any(GetStringSlice(key, any(def).([]string))).(T)
-	case uint:
-		return any(GetUint(key, any(def).(uint))).(T)
-	case []uint:
-		return any(GetUintSlice(key, any(def).([]uint))).(T)
-	case uint8:
-		return any(GetUint8(key, any(def).(uint8))).(T)
-	case []uint8:
-		return any(GetUint8Slice(key, any(def).([]uint8))).(T)
-	case uint16:
-		return any(GetUint16(key, any(def).(uint16))).(T)
-	case []uint16:
-		return any(GetUint16Slice(key, any(def).([]uint16))).(T)
-	case uint32:
-		return any(GetUint32(key, any(def).(uint32))).(T)
-	case []uint32:
-		return any(GetUint32Slice(key, any(def).([]uint32))).(T)
-	case uint64:
-		return any(GetUint64(key, any(def).(uint64))).(T)
-	case []uint64:
-		return any(GetUint64Slice(key, any(def).([]uint64))).(T)
-	default:
-		panic(fmt.Sprintf("type '%T' is not supported", t))
+	v, err := Lookup[T](key)
+	if err == nil {
+		return v
 	}
+
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
+		return def
+	}
+
+	panic(err)
 }
 
-// MustGet extracts string value from env based on its type. if not set, it panics.
+// MustGet extracts value from env based on its type. If not set, it panics.
 func MustGet[T Type](key string) T {
+	v, err := Lookup[T](key)
+	if err != nil {
+		panic(err)
+	}
+
+	return v
+}
+
+// Lookup extracts value from env based on its type.
+// If not set, returns zero value and NotSetError.
+// If the value cannot be parsed, returns zero value and InvalidValueError.
+func Lookup[T Type](key string) (res T, err error) {
 	var v T
 
-	switch t := any(v).(type) {
+	switch any(v).(type) {
 	case bool:
-		return any(MustGetBool(key)).(T)
+		r, e := LookupBool(key)
+		res, err = any(r).(T), e
 	case float32:
-		return any(MustGetFloat32(key)).(T)
+		r, e := LookupFloat32(key)
+		res, err = any(r).(T), e
 	case []float32:
-		return any(MustGetFloat32Slice(key)).(T)
+		r, e := LookupFloat32Slice(key)
+		res, err = any(r).(T), e
 	case float64:
-		return any(MustGetFloat64(key)).(T)
+		r, e := LookupFloat64(key)
+		res, err = any(r).(T), e
 	case []float64:
-		return any(MustGetFloat64Slice(key)).(T)
+		r, e := LookupFloat64Slice(key)
+		res, err = any(r).(T), e
 	case int:
-		return any(MustGetInt(key)).(T)
+		r, e := LookupInt(key)
+		res, err = any(r).(T), e
 	case []int:
-		return any(MustGetIntSlice(key)).(T)
+		r, e := LookupIntSlice(key)
+		res, err = any(r).(T), e
 	case int8:
-		return any(MustGetInt8(key)).(T)
+		r, e := LookupInt8(key)
+		res, err = any(r).(T), e
 	case []int8:
-		return any(MustGetInt8Slice(key)).(T)
+		r, e := LookupInt8Slice(key)
+		res, err = any(r).(T), e
 	case int16:
-		return any(MustGetInt16(key)).(T)
+		r, e := LookupInt16(key)
+		res, err = any(r).(T), e
 	case []int16:
-		return any(MustGetInt16Slice(key)).(T)
+		r, e := LookupInt16Slice(key)
+		res, err = any(r).(T), e
 	case int32:
-		return any(MustGetInt32(key)).(T)
+		r, e := LookupInt32(key)
+		res, err = any(r).(T), e
 	case []int32:
-		return any(MustGetInt32Slice(key)).(T)
+		r, e := LookupInt32Slice(key)
+		res, err = any(r).(T), e
 	case int64:
-		return any(MustGetInt64(key)).(T)
+		r, e := LookupInt64(key)
+		res, err = any(r).(T), e
 	case []int64:
-		return any(MustGetInt64Slice(key)).(T)
+		r, e := LookupInt64Slice(key)
+		res, err = any(r).(T), e
 	case string:
-		return any(MustGetString(key)).(T)
+		r, e := LookupString(key)
+		res, err = any(r).(T), e
 	case []string:
-		return any(MustGetStringSlice(key)).(T)
+		r, e := LookupStringSlice(key)
+		res, err = any(r).(T), e
+	case time.Duration:
+		r, e := LookupDuration(key)
+		res, err = any(r).(T), e
 	case uint:
-		return any(MustGetUint(key)).(T)
+		r, e := LookupUint(key)
+		res, err = any(r).(T), e
 	case []uint:
-		return any(MustGetUintSlice(key)).(T)
+		r, e := LookupUintSlice(key)
+		res, err = any(r).(T), e
 	case uint8:
-		return any(MustGetUint8(key)).(T)
+		r, e := LookupUint8(key)
+		res, err = any(r).(T), e
 	case []uint8:
-		return any(MustGetUint8Slice(key)).(T)
+		r, e := LookupUint8Slice(key)
+		res, err = any(r).(T), e
 	case uint16:
-		return any(MustGetUint16(key)).(T)
+		r, e := LookupUint16(key)
+		res, err = any(r).(T), e
 	case []uint16:
-		return any(MustGetUint16Slice(key)).(T)
+		r, e := LookupUint16Slice(key)
+		res, err = any(r).(T), e
 	case uint32:
-		return any(MustGetUint32(key)).(T)
+		r, e := LookupUint32(key)
+		res, err = any(r).(T), e
 	case []uint32:
-		return any(MustGetUint32Slice(key)).(T)
+		r, e := LookupUint32Slice(key)
+		res, err = any(r).(T), e
 	case uint64:
-		return any(MustGetUint64(key)).(T)
+		r, e := LookupUint64(key)
+		res, err = any(r).(T), e
 	case []uint64:
-		return any(MustGetUint64Slice(key)).(T)
-	default:
-		panic(fmt.Sprintf("type '%T' is not supported", t))
+		r, e := LookupUint64Slice(key)
+		res, err = any(r).(T), e
 	}
+
+	return //nolint:nakedret
 }

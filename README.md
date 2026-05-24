@@ -24,6 +24,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nasermirzaei89/env"
 )
@@ -41,7 +42,10 @@ func main() {
 	s := env.GetString("B", "hi")
 	fmt.Println(s) // hi (default)
 
-	// Generics
+	d := env.GetDuration("D", 5*time.Second)
+	fmt.Println(d) // 5s (default)
+
+	// With generics
 
 	b2 := env.Get("A", true)
 	fmt.Println(b2) // true (default)
@@ -54,6 +58,9 @@ func main() {
 
 	s2 := env.Get("B", "hi")
 	fmt.Println(s2) // hi (default)
+
+	d2 := env.Get("D", 5*time.Second)
+	fmt.Println(d2) // 5s (default)
 }
 ```
 
@@ -64,6 +71,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nasermirzaei89/env"
 )
@@ -74,12 +82,62 @@ func main() {
 
 	s = env.MustGetString("NEW") // panics
 
+	d := env.MustGetDuration("TIMEOUT")
+	fmt.Println(d) // e.g. 30s
+
+	d = env.MustGetDuration("NEW") // panics
+
 	// Generics
 
 	s2 := env.MustGet[string]("HOME")
 	fmt.Println(s2) // /Users/nasermirzaei89
 
 	s2 = env.MustGet[string]("NEW") // panics
+
+	d2 := env.MustGet[time.Duration]("TIMEOUT")
+	fmt.Println(d2) // e.g. 30s
+
+	d2 = env.MustGet[time.Duration]("NEW") // panics
+}
+```
+
+### Lookup with structured errors
+
+`LookupXXX` returns the value and an `error`. Use `errors.As` to distinguish between a missing key (`NotSetError`) and an unparseable value (`InvalidValueError`).
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+	"time"
+
+	"github.com/nasermirzaei89/env"
+)
+
+func main() {
+	// Typed lookup
+	v, err := env.LookupInt("PORT")
+	if err != nil {
+		var notSet env.NotSetError
+		var invalid env.InvalidValueError
+
+		switch {
+		case errors.As(err, &notSet):
+			fmt.Printf("%q is not set\n", notSet.Key)
+		case errors.As(err, &invalid):
+			fmt.Printf("%q has invalid value %q: %v\n", invalid.Key, invalid.Value, invalid.Err)
+		}
+	} else {
+		fmt.Println("PORT =", v)
+	}
+
+	// Generic lookup
+	s, err := env.Lookup[string]("HOME")
+	if err == nil {
+		fmt.Println("HOME =", s)
+	}
 }
 ```
 
