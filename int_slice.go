@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// GetIntSlice extracts slice of int value with the format "1,2,3" from env. if not set, returns default value.
+// GetIntSlice extracts slice of int values with the format "1,2,3" from env. If not set, returns default value.
 func GetIntSlice(key string, def []int) []int {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -25,7 +25,7 @@ func GetIntSlice(key string, def []int) []int {
 	for i := range ss {
 		v, err := strconv.Atoi(ss[i])
 		if err != nil {
-			return def
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = v
@@ -34,11 +34,11 @@ func GetIntSlice(key string, def []int) []int {
 	return res
 }
 
-// MustGetIntSlice extracts slice of int value with the format "1,2,3" from env. if not set, it panics.
+// MustGetIntSlice extracts slice of int values with the format "1,2,3" from env. If not set, it panics.
 func MustGetIntSlice(key string) []int {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	if s == "" {
@@ -52,7 +52,7 @@ func MustGetIntSlice(key string) []int {
 	for i := range ss {
 		v, err := strconv.Atoi(ss[i])
 		if err != nil {
-			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = v

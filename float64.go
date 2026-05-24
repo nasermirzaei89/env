@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// GetFloat64 extracts int value from env. if not set, returns default value.
+// GetFloat64 extracts float64 value from env. If not set, returns default value.
 func GetFloat64(key string, def float64) float64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -15,22 +15,22 @@ func GetFloat64(key string, def float64) float64 {
 
 	v, err := strconv.ParseFloat(s, bitSize64)
 	if err != nil {
-		return def
+		panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 	}
 
 	return v
 }
 
-// MustGetFloat64 extracts int value from env. if not set, it panics.
+// MustGetFloat64 extracts float64 value from env. If not set, it panics.
 func MustGetFloat64(key string) float64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	v, err := strconv.ParseFloat(s, bitSize64)
 	if err != nil {
-		panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+		panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 	}
 
 	return v

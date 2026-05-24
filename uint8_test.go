@@ -17,8 +17,9 @@ func TestGetUint8(t *testing.T) {
 	t.Run("GetInvalidUInt8WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetUint8("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint8("V1", def)
+		})
 	})
 
 	t.Run("GetValidUInt8WithDefault", func(t *testing.T) {

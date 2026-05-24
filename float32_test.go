@@ -17,11 +17,9 @@ func TestGetFloat32(t *testing.T) {
 	t.Run("GetInvalidFloat32WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		def := float32(12.5)
-
-		res := env.GetFloat32("V1", def)
-
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetFloat32("V1", float32(12.5))
+		})
 	})
 
 	t.Run("GetValidFloat32WithDefault", func(t *testing.T) {

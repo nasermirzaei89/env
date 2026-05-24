@@ -29,8 +29,9 @@ func TestGetInt8Slice(t *testing.T) {
 
 		t.Setenv("V1", "invalid")
 
-		res := env.GetInt8Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetInt8Slice("V1", def)
+		})
 	})
 
 	t.Run("GetInvalidInt8SliceWithDefault2", func(t *testing.T) {
@@ -38,8 +39,9 @@ func TestGetInt8Slice(t *testing.T) {
 
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetInt8Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetInt8Slice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyInt8SliceWithDefault", func(t *testing.T) {

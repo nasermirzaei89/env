@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/nasermirzaei89/env"
 )
@@ -65,9 +66,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidFloat32WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidFloat32WithDefault", func(t *testing.T) {
@@ -100,8 +101,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidFloat32SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1.2,2.3,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyFloat32SliceWithDefault", func(t *testing.T) {
@@ -126,8 +128,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidFloat64WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidFloat64WithDefault", func(t *testing.T) {
@@ -159,8 +162,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidFloat64SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1.2,2.3,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyFloat64SliceWithDefault", func(t *testing.T) {
@@ -185,8 +189,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidIntWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidIntWithDefault", func(t *testing.T) {
@@ -218,8 +223,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidIntSliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyIntSliceWithDefault", func(t *testing.T) {
@@ -244,8 +250,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt8WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidInt8WithDefault", func(t *testing.T) {
@@ -280,8 +287,9 @@ func TestGet(t *testing.T) {
 
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetInvalidInt8SliceWithDefault2", func(t *testing.T) {
@@ -289,8 +297,9 @@ func TestGet(t *testing.T) {
 
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyInt8SliceWithDefault", func(t *testing.T) {
@@ -316,8 +325,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt16WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidInt16WithDefault", func(t *testing.T) {
@@ -349,8 +359,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt16SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyInt16SliceWithDefault", func(t *testing.T) {
@@ -375,9 +386,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt32WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidInt32WithDefault", func(t *testing.T) {
@@ -410,8 +421,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt32SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyInt32SliceWithDefault", func(t *testing.T) {
@@ -436,8 +448,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt64WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidInt64WithDefault", func(t *testing.T) {
@@ -469,8 +482,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidInt64SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyInt64SliceWithDefault", func(t *testing.T) {
@@ -538,8 +552,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUIntWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidUIntWithDefault", func(t *testing.T) {
@@ -571,8 +586,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUIntSliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyUIntSliceWithDefault", func(t *testing.T) {
@@ -597,8 +613,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt8WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidUInt8WithDefault", func(t *testing.T) {
@@ -630,8 +647,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt8SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetInvalidUInt8SliceWithDefault2", func(t *testing.T) {
@@ -656,8 +674,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt16WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidUInt16WithDefault", func(t *testing.T) {
@@ -689,8 +708,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt16SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyUInt16SliceWithDefault", func(t *testing.T) {
@@ -715,8 +735,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt32WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidUInt32WithDefault", func(t *testing.T) {
@@ -748,8 +769,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt32SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyUInt32SliceWithDefault", func(t *testing.T) {
@@ -774,8 +796,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt64WithDefault", func(t *testing.T) {
 			t.Setenv("V1", "invalid")
 
-			res := env.Get("V1", def)
-			assertEqual(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetValidUInt64WithDefault", func(t *testing.T) {
@@ -807,8 +830,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetInvalidUInt64SliceWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "1,2,Three")
 
-			res := env.Get("V1", def)
-			assertEqualSlices(t, def, res)
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 
 		t.Run("GetEmptyUInt64SliceWithDefault", func(t *testing.T) {
@@ -818,6 +842,31 @@ func TestGet(t *testing.T) {
 
 			res := env.Get("V1", def)
 			assertEqualSlices(t, expected, res)
+		})
+	}
+
+	// time.Duration
+	{
+		def := time.Second
+
+		t.Run("GetAbsentDurationWithDefault", func(t *testing.T) {
+			res := env.Get("V1", def)
+			assertEqual(t, def, res)
+		})
+
+		t.Run("GetValidDurationWithDefault", func(t *testing.T) {
+			t.Setenv("V1", "2s")
+
+			res := env.Get("V1", def)
+			assertEqual(t, 2*time.Second, res)
+		})
+
+		t.Run("GetInvalidDurationWithDefault", func(t *testing.T) {
+			t.Setenv("V1", "invalid")
+
+			assertPanics(t, func() {
+				env.Get("V1", def)
+			})
 		})
 	}
 }
@@ -1632,6 +1681,30 @@ func TestMustGet(t *testing.T) {
 
 			res := env.MustGet[[]uint64]("V1")
 			assertEqualSlices(t, expected, res)
+		})
+	}
+
+	// time.Duration
+	{
+		t.Run("MustGetAbsentDuration", func(t *testing.T) {
+			assertPanics(t, func() {
+				env.MustGet[time.Duration]("V1")
+			})
+		})
+
+		t.Run("MustGetValidDuration", func(t *testing.T) {
+			t.Setenv("V1", "2s")
+
+			res := env.MustGet[time.Duration]("V1")
+			assertEqual(t, 2*time.Second, res)
+		})
+
+		t.Run("MustGetInvalidDuration", func(t *testing.T) {
+			t.Setenv("V1", "invalid")
+
+			assertPanics(t, func() {
+				env.MustGet[time.Duration]("V1")
+			})
 		})
 	}
 }

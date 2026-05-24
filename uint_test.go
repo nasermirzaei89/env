@@ -17,8 +17,9 @@ func TestGetUint(t *testing.T) {
 	t.Run("GetInvalidUIntWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetUint("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint("V1", def)
+		})
 	})
 
 	t.Run("GetValidUIntWithDefault", func(t *testing.T) {

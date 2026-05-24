@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// GetFloat32Slice extracts slice of float32 value with the format "1.2,2.3,3.4" from env.
-// if not set, returns default value.
+// GetFloat32Slice extracts slice of float32 values with the format "1.2,2.3,3.4" from env.
+// If not set, returns default value.
 func GetFloat32Slice(key string, def []float32) []float32 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -26,7 +26,7 @@ func GetFloat32Slice(key string, def []float32) []float32 {
 	for i := range ss {
 		v, err := strconv.ParseFloat(ss[i], bitSize32)
 		if err != nil {
-			return def
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = float32(v)
@@ -35,11 +35,11 @@ func GetFloat32Slice(key string, def []float32) []float32 {
 	return res
 }
 
-// MustGetFloat32Slice extracts slice of float32 value with the format "1.2,2.3,3.4" from env. if not set, it panics.
+// MustGetFloat32Slice extracts slice of float32 values with the format "1.2,2.3,3.4" from env. If not set, it panics.
 func MustGetFloat32Slice(key string) []float32 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	if s == "" {
@@ -53,7 +53,7 @@ func MustGetFloat32Slice(key string) []float32 {
 	for i := range ss {
 		v, err := strconv.ParseFloat(ss[i], bitSize32)
 		if err != nil {
-			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = float32(v)

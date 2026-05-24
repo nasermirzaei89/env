@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// GetUint8Slice extracts slice of uint8 value with the format "1,2,3" from env. if not set, returns default value.
+// GetUint8Slice extracts slice of uint8 values with the format "1,2,3" from env. If not set, returns default value.
 func GetUint8Slice(key string, def []uint8) []uint8 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -25,7 +25,7 @@ func GetUint8Slice(key string, def []uint8) []uint8 {
 	for i := range ss {
 		v, err := strconv.ParseUint(ss[i], decimalBase, bitSize8)
 		if err != nil {
-			return def
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = uint8(v)
@@ -34,11 +34,11 @@ func GetUint8Slice(key string, def []uint8) []uint8 {
 	return res
 }
 
-// MustGetUint8Slice extracts slice of uint8 value with the format "1,2,3" from env. if not set, it panics.
+// MustGetUint8Slice extracts slice of uint8 values with the format "1,2,3" from env. If not set, it panics.
 func MustGetUint8Slice(key string) []uint8 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	if s == "" {
@@ -52,7 +52,7 @@ func MustGetUint8Slice(key string) []uint8 {
 	for i := range ss {
 		v, err := strconv.ParseUint(ss[i], decimalBase, bitSize8)
 		if err != nil {
-			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = uint8(v)

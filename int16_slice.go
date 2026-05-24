@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// GetInt16Slice extracts slice of int16 value with the format "1,2,3" from env. if not set, returns default value.
+// GetInt16Slice extracts slice of int16 values with the format "1,2,3" from env. If not set, returns default value.
 func GetInt16Slice(key string, def []int16) []int16 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -25,7 +25,7 @@ func GetInt16Slice(key string, def []int16) []int16 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize16)
 		if err != nil {
-			return def
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = int16(v)
@@ -34,11 +34,11 @@ func GetInt16Slice(key string, def []int16) []int16 {
 	return res
 }
 
-// MustGetInt16Slice extracts slice of int16 value with the format "1,2,3" from env. if not set, it panics.
+// MustGetInt16Slice extracts slice of int16 values with the format "1,2,3" from env. If not set, it panics.
 func MustGetInt16Slice(key string) []int16 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	if s == "" {
@@ -52,7 +52,7 @@ func MustGetInt16Slice(key string) []int16 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize16)
 		if err != nil {
-			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = int16(v)

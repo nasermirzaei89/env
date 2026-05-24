@@ -17,8 +17,9 @@ func TestGetFloat64(t *testing.T) {
 	t.Run("GetInvalidFloat64WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetFloat64("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetFloat64("V1", def)
+		})
 	})
 
 	t.Run("GetValidFloat64WithDefault", func(t *testing.T) {

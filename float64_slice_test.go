@@ -26,8 +26,9 @@ func TestGetFloat64Slice(t *testing.T) {
 	t.Run("GetInvalidFloat64SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1.2,2.3,Three")
 
-		res := env.GetFloat64Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetFloat64Slice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyFloat64SliceWithDefault", func(t *testing.T) {

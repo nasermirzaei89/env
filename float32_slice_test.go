@@ -29,8 +29,9 @@ func TestGetFloat32Slice(t *testing.T) {
 
 		t.Setenv("V1", "1.2,2.3,Three")
 
-		res := env.GetFloat32Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetFloat32Slice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyFloat32SliceWithDefault", func(t *testing.T) {

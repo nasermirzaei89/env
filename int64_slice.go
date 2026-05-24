@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// GetInt64Slice extracts slice of int64 value with the format "1,2,3" from env. if not set, returns default value.
+// GetInt64Slice extracts slice of int64 values with the format "1,2,3" from env. If not set, returns default value.
 func GetInt64Slice(key string, def []int64) []int64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -25,7 +25,7 @@ func GetInt64Slice(key string, def []int64) []int64 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize64)
 		if err != nil {
-			return def
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = v
@@ -34,11 +34,11 @@ func GetInt64Slice(key string, def []int64) []int64 {
 	return res
 }
 
-// MustGetInt64Slice extracts slice of int64 value with the format "1,2,3" from env. if not set, it panics.
+// MustGetInt64Slice extracts slice of int64 values with the format "1,2,3" from env. If not set, it panics.
 func MustGetInt64Slice(key string) []int64 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	if s == "" {
@@ -52,7 +52,7 @@ func MustGetInt64Slice(key string) []int64 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize64)
 		if err != nil {
-			panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 		}
 
 		res[i] = v

@@ -17,8 +17,9 @@ func TestGetInt32(t *testing.T) {
 	t.Run("GetInvalidInt32WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetInt32("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetInt32("V1", def)
+		})
 	})
 
 	t.Run("GetValidInt32WithDefault", func(t *testing.T) {

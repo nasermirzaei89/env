@@ -24,6 +24,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nasermirzaei89/env"
 )
@@ -41,6 +42,9 @@ func main() {
 	s := env.GetString("B", "hi")
 	fmt.Println(s) // hi (default)
 
+	d := env.GetDuration("D", 5*time.Second)
+	fmt.Println(d) // 5s (default)
+
 	// Generics
 
 	b2 := env.Get("A", true)
@@ -54,6 +58,9 @@ func main() {
 
 	s2 := env.Get("B", "hi")
 	fmt.Println(s2) // hi (default)
+
+	d2 := env.Get("D", 5*time.Second)
+	fmt.Println(d2) // 5s (default)
 }
 ```
 
@@ -64,6 +71,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/nasermirzaei89/env"
 )
@@ -74,12 +82,22 @@ func main() {
 
 	s = env.MustGetString("NEW") // panics
 
+	d := env.MustGetDuration("TIMEOUT")
+	fmt.Println(d) // e.g. 30s
+
+	d = env.MustGetDuration("NEW") // panics
+
 	// Generics
 
 	s2 := env.MustGet[string]("HOME")
 	fmt.Println(s2) // /Users/nasermirzaei89
 
 	s2 = env.MustGet[string]("NEW") // panics
+
+	d2 := env.MustGet[time.Duration]("TIMEOUT")
+	fmt.Println(d2) // e.g. 30s
+
+	d2 = env.MustGet[time.Duration]("NEW") // panics
 }
 ```
 

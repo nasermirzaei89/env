@@ -26,8 +26,9 @@ func TestGetIntSlice(t *testing.T) {
 	t.Run("GetInvalidIntSliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetIntSlice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetIntSlice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyIntSliceWithDefault", func(t *testing.T) {

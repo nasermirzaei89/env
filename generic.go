@@ -2,6 +2,7 @@ package env
 
 import (
 	"fmt"
+	"time"
 )
 
 type Type interface {
@@ -9,10 +10,11 @@ type Type interface {
 		float32 | []float32 | float64 | []float64 |
 		int | []int | int8 | []int8 | int16 | []int16 | int32 | []int32 | int64 | []int64 |
 		string | []string |
+		time.Duration |
 		uint | []uint | uint8 | []uint8 | uint16 | []uint16 | uint32 | []uint32 | uint64 | []uint64
 }
 
-// Get extracts value from env based on its type. if not set, returns default value.
+// Get extracts value from env based on its type. If not set, returns default value.
 func Get[T Type](key string, def T) T {
 	var v T
 
@@ -51,6 +53,8 @@ func Get[T Type](key string, def T) T {
 		return any(GetString(key, any(def).(string))).(T)
 	case []string:
 		return any(GetStringSlice(key, any(def).([]string))).(T)
+	case time.Duration:
+		return any(GetDuration(key, any(def).(time.Duration))).(T)
 	case uint:
 		return any(GetUint(key, any(def).(uint))).(T)
 	case []uint:
@@ -76,7 +80,7 @@ func Get[T Type](key string, def T) T {
 	}
 }
 
-// MustGet extracts string value from env based on its type. if not set, it panics.
+// MustGet extracts value from env based on its type. If not set, it panics.
 func MustGet[T Type](key string) T {
 	var v T
 
@@ -115,6 +119,8 @@ func MustGet[T Type](key string) T {
 		return any(MustGetString(key)).(T)
 	case []string:
 		return any(MustGetStringSlice(key)).(T)
+	case time.Duration:
+		return any(MustGetDuration(key)).(T)
 	case uint:
 		return any(MustGetUint(key)).(T)
 	case []uint:

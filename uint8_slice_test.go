@@ -26,8 +26,9 @@ func TestGetUint8Slice(t *testing.T) {
 	t.Run("GetInvalidUInt8SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetUint8Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint8Slice("V1", def)
+		})
 	})
 
 	t.Run("GetInvalidUInt8SliceWithDefault2", func(t *testing.T) {

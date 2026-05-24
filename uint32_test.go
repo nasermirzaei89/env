@@ -17,8 +17,9 @@ func TestGetUint32(t *testing.T) {
 	t.Run("GetInvalidUInt32WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetUint32("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint32("V1", def)
+		})
 	})
 
 	t.Run("GetValidUInt32WithDefault", func(t *testing.T) {

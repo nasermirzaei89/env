@@ -26,8 +26,9 @@ func TestGetUint16Slice(t *testing.T) {
 	t.Run("GetInvalidUInt16SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetUint16Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint16Slice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyUInt16SliceWithDefault", func(t *testing.T) {

@@ -17,8 +17,9 @@ func TestGetInt8(t *testing.T) {
 	t.Run("GetInvalidInt8WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetInt8("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetInt8("V1", def)
+		})
 	})
 
 	t.Run("GetValidInt8WithDefault", func(t *testing.T) {

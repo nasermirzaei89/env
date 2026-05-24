@@ -26,8 +26,9 @@ func TestGetUintSlice(t *testing.T) {
 	t.Run("GetInvalidUIntSliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetUintSlice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetUintSlice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyUIntSliceWithDefault", func(t *testing.T) {

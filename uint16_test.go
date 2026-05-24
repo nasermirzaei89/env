@@ -17,8 +17,9 @@ func TestGetUint16(t *testing.T) {
 	t.Run("GetInvalidUInt16WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetUint16("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint16("V1", def)
+		})
 	})
 
 	t.Run("GetValidUInt16WithDefault", func(t *testing.T) {

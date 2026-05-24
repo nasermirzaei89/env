@@ -26,8 +26,9 @@ func TestGetUint32Slice(t *testing.T) {
 	t.Run("GetInvalidUInt32SliceWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "1,2,Three")
 
-		res := env.GetUint32Slice("V1", def)
-		assertEqualSlices(t, def, res)
+		assertPanics(t, func() {
+			env.GetUint32Slice("V1", def)
+		})
 	})
 
 	t.Run("GetEmptyUInt32SliceWithDefault", func(t *testing.T) {

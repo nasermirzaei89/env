@@ -17,8 +17,9 @@ func TestGetInt64(t *testing.T) {
 	t.Run("GetInvalidInt64WithDefault", func(t *testing.T) {
 		t.Setenv("V1", "invalid")
 
-		res := env.GetInt64("V1", def)
-		assertEqual(t, def, res)
+		assertPanics(t, func() {
+			env.GetInt64("V1", def)
+		})
 	})
 
 	t.Run("GetValidInt64WithDefault", func(t *testing.T) {

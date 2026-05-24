@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// GetUint8 extracts uint8 value from env. if not set, returns default value.
+// GetUint8 extracts uint8 value from env. If not set, returns default value.
 func GetUint8(key string, def uint8) uint8 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
@@ -15,22 +15,22 @@ func GetUint8(key string, def uint8) uint8 {
 
 	v, err := strconv.ParseUint(s, decimalBase, bitSize8)
 	if err != nil {
-		return def
+		panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 	}
 
 	return uint8(v)
 }
 
-// MustGetUint8 extracts uint8 value from env. if not set, it panics.
+// MustGetUint8 extracts uint8 value from env. If not set, it panics.
 func MustGetUint8(key string) uint8 {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		panic(fmt.Sprintf("environment variable '%s' not set", key))
+		panic(fmt.Sprintf("environment variable %q not set", key))
 	}
 
 	v, err := strconv.ParseUint(s, decimalBase, bitSize8)
 	if err != nil {
-		panic(fmt.Sprintf("invalid environment variable '%s' has been set: %s", key, s))
+		panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
 	}
 
 	return uint8(v)
