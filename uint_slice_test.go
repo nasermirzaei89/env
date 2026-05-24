@@ -1,6 +1,7 @@
 package env_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/nasermirzaei89/env"
@@ -72,5 +73,33 @@ func TestMustGetUintSlice(t *testing.T) {
 
 		res := env.MustGetUintSlice("V1")
 		assertEqualSlices(t, expected, res)
+	})
+}
+
+func TestLookupUintSlice(t *testing.T) {
+	t.Run("LookupAbsentUintSlice", func(t *testing.T) {
+		_, err := env.LookupUintSlice("V1")
+
+		var notSetErr env.NotSetError
+		assertTrue(t, errors.As(err, &notSetErr))
+		assertEqual(t, "V1", notSetErr.Key)
+	})
+
+	t.Run("LookupValidUintSlice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,3")
+
+		res, err := env.LookupUintSlice("V1")
+		assertNoError(t, err)
+		assertEqualSlices(t, []uint{1, 2, 3}, res)
+	})
+
+	t.Run("LookupInvalidUintSlice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
+
+		_, err := env.LookupUintSlice("V1")
+
+		var invalidValueErr env.InvalidValueError
+		assertTrue(t, errors.As(err, &invalidValueErr))
+		assertEqual(t, "V1", invalidValueErr.Key)
 	})
 }

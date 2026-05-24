@@ -1,21 +1,22 @@
 package env
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
 )
 
-// GetInt32Slice extracts slice of int32 values with the format "1,2,3" from env. If not set, returns default value.
-func GetInt32Slice(key string, def []int32) []int32 {
+// LookupInt32Slice extracts slice of int32 values with the format "1,2,3" from env.
+// If not set, returns NotSetError. If the value cannot be parsed, returns InvalidValueError.
+func LookupInt32Slice(key string) ([]int32, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		return def
+		return nil, NotSetError{Key: key}
 	}
 
 	if s == "" {
-		return []int32{}
+		return []int32{}, nil
 	}
 
 	ss := strings.Split(s, ",")
@@ -25,38 +26,36 @@ func GetInt32Slice(key string, def []int32) []int32 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize32)
 		if err != nil {
-			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
+			return nil, InvalidValueError{Key: key, Value: s, Err: err}
 		}
 
 		res[i] = int32(v)
 	}
 
-	return res
+	return res, nil
+}
+
+// GetInt32Slice extracts slice of int32 values with the format "1,2,3" from env. If not set, returns default value.
+func GetInt32Slice(key string, def []int32) []int32 {
+	v, err := LookupInt32Slice(key)
+	if err == nil {
+		return v
+	}
+
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
+		return def
+	}
+
+	panic(err)
 }
 
 // MustGetInt32Slice extracts slice of int32 values with the format "1,2,3" from env. If not set, it panics.
 func MustGetInt32Slice(key string) []int32 {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable %q not set", key))
+	v, err := LookupInt32Slice(key)
+	if err != nil {
+		panic(err)
 	}
 
-	if s == "" {
-		return []int32{}
-	}
-
-	ss := strings.Split(s, ",")
-
-	res := make([]int32, len(ss))
-
-	for i := range ss {
-		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize32)
-		if err != nil {
-			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
-		}
-
-		res[i] = int32(v)
-	}
-
-	return res
+	return v
 }

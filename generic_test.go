@@ -1,6 +1,7 @@
 package env_test
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -42,8 +43,9 @@ func TestGet(t *testing.T) {
 		t.Run("GetEmptyAsBoolWithDefault", func(t *testing.T) {
 			t.Setenv("V1", "")
 
-			res := env.Get("V1", false)
-			assertTrue(t, res)
+			assertPanics(t, func() {
+				env.Get("V1", false)
+			})
 		})
 
 		t.Run("GetOneAsBoolWithDefault", func(t *testing.T) {
@@ -1705,6 +1707,371 @@ func TestMustGet(t *testing.T) {
 			assertPanics(t, func() {
 				env.MustGet[time.Duration]("V1")
 			})
+		})
+	}
+}
+
+func TestLookup(t *testing.T) {
+	// bool
+	{
+		t.Run("LookupAbsentBool", func(t *testing.T) {
+			_, err := env.Lookup[bool]("V1")
+
+			var notSetErr env.NotSetError
+			assertTrue(t, errors.As(err, &notSetErr))
+		})
+
+		t.Run("LookupValidBool", func(t *testing.T) {
+			t.Setenv("V1", "true")
+
+			res, err := env.Lookup[bool]("V1")
+			assertNoError(t, err)
+			assertTrue(t, res)
+		})
+
+		t.Run("LookupInvalidBool", func(t *testing.T) {
+			t.Setenv("V1", "invalid")
+
+			_, err := env.Lookup[bool]("V1")
+
+			var invalidValueErr env.InvalidValueError
+			assertTrue(t, errors.As(err, &invalidValueErr))
+		})
+	}
+
+	// string
+	{
+		t.Run("LookupAbsentString", func(t *testing.T) {
+			_, err := env.Lookup[string]("V1")
+
+			var notSetErr env.NotSetError
+			assertTrue(t, errors.As(err, &notSetErr))
+		})
+
+		t.Run("LookupValidString", func(t *testing.T) {
+			t.Setenv("V1", "hello")
+
+			res, err := env.Lookup[string]("V1")
+			assertNoError(t, err)
+			assertEqual(t, "hello", res)
+		})
+	}
+
+	// int
+	{
+		t.Run("LookupAbsentInt", func(t *testing.T) {
+			_, err := env.Lookup[int]("V1")
+
+			var notSetErr env.NotSetError
+			assertTrue(t, errors.As(err, &notSetErr))
+		})
+
+		t.Run("LookupValidInt", func(t *testing.T) {
+			t.Setenv("V1", "14")
+
+			res, err := env.Lookup[int]("V1")
+			assertNoError(t, err)
+			assertEqual(t, 14, res)
+		})
+
+		t.Run("LookupInvalidInt", func(t *testing.T) {
+			t.Setenv("V1", "invalid")
+
+			_, err := env.Lookup[int]("V1")
+
+			var invalidValueErr env.InvalidValueError
+			assertTrue(t, errors.As(err, &invalidValueErr))
+		})
+	}
+
+	// time.Duration
+	{
+		t.Run("LookupAbsentDuration", func(t *testing.T) {
+			_, err := env.Lookup[time.Duration]("V1")
+
+			var notSetErr env.NotSetError
+			assertTrue(t, errors.As(err, &notSetErr))
+		})
+
+		t.Run("LookupValidDuration", func(t *testing.T) {
+			t.Setenv("V1", "2s")
+
+			res, err := env.Lookup[time.Duration]("V1")
+			assertNoError(t, err)
+			assertEqual(t, 2*time.Second, res)
+		})
+
+		t.Run("LookupInvalidDuration", func(t *testing.T) {
+			t.Setenv("V1", "invalid")
+
+			_, err := env.Lookup[time.Duration]("V1")
+
+			var invalidValueErr env.InvalidValueError
+			assertTrue(t, errors.As(err, &invalidValueErr))
+		})
+	}
+
+	// float32
+	{
+		t.Run("LookupValidFloat32", func(t *testing.T) {
+			t.Setenv("V1", "1.5")
+
+			res, err := env.Lookup[float32]("V1")
+			assertNoError(t, err)
+			assertEqual(t, float32(1.5), res)
+		})
+	}
+
+	// []float32
+	{
+		t.Run("LookupValidFloat32Slice", func(t *testing.T) {
+			t.Setenv("V1", "1.5,2.5")
+
+			res, err := env.Lookup[[]float32]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []float32{1.5, 2.5}, res)
+		})
+	}
+
+	// float64
+	{
+		t.Run("LookupValidFloat64", func(t *testing.T) {
+			t.Setenv("V1", "1.5")
+
+			res, err := env.Lookup[float64]("V1")
+			assertNoError(t, err)
+			assertEqual(t, float64(1.5), res)
+		})
+	}
+
+	// []float64
+	{
+		t.Run("LookupValidFloat64Slice", func(t *testing.T) {
+			t.Setenv("V1", "1.5,2.5")
+
+			res, err := env.Lookup[[]float64]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []float64{1.5, 2.5}, res)
+		})
+	}
+
+	// []int
+	{
+		t.Run("LookupValidIntSlice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]int]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []int{1, 2, 3}, res)
+		})
+	}
+
+	// int8
+	{
+		t.Run("LookupValidInt8", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[int8]("V1")
+			assertNoError(t, err)
+			assertEqual(t, int8(42), res)
+		})
+	}
+
+	// []int8
+	{
+		t.Run("LookupValidInt8Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]int8]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []int8{1, 2, 3}, res)
+		})
+	}
+
+	// int16
+	{
+		t.Run("LookupValidInt16", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[int16]("V1")
+			assertNoError(t, err)
+			assertEqual(t, int16(42), res)
+		})
+	}
+
+	// []int16
+	{
+		t.Run("LookupValidInt16Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]int16]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []int16{1, 2, 3}, res)
+		})
+	}
+
+	// int32
+	{
+		t.Run("LookupValidInt32", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[int32]("V1")
+			assertNoError(t, err)
+			assertEqual(t, int32(42), res)
+		})
+	}
+
+	// []int32
+	{
+		t.Run("LookupValidInt32Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]int32]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []int32{1, 2, 3}, res)
+		})
+	}
+
+	// int64
+	{
+		t.Run("LookupValidInt64", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[int64]("V1")
+			assertNoError(t, err)
+			assertEqual(t, int64(42), res)
+		})
+	}
+
+	// []int64
+	{
+		t.Run("LookupValidInt64Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]int64]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []int64{1, 2, 3}, res)
+		})
+	}
+
+	// []string
+	{
+		t.Run("LookupValidStringSlice", func(t *testing.T) {
+			t.Setenv("V1", "foo,bar")
+
+			res, err := env.Lookup[[]string]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []string{"foo", "bar"}, res)
+		})
+	}
+
+	// uint
+	{
+		t.Run("LookupValidUint", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[uint]("V1")
+			assertNoError(t, err)
+			assertEqual(t, uint(42), res)
+		})
+	}
+
+	// []uint
+	{
+		t.Run("LookupValidUintSlice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]uint]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []uint{1, 2, 3}, res)
+		})
+	}
+
+	// uint8
+	{
+		t.Run("LookupValidUint8", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[uint8]("V1")
+			assertNoError(t, err)
+			assertEqual(t, uint8(42), res)
+		})
+	}
+
+	// []uint8
+	{
+		t.Run("LookupValidUint8Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]uint8]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []uint8{1, 2, 3}, res)
+		})
+	}
+
+	// uint16
+	{
+		t.Run("LookupValidUint16", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[uint16]("V1")
+			assertNoError(t, err)
+			assertEqual(t, uint16(42), res)
+		})
+	}
+
+	// []uint16
+	{
+		t.Run("LookupValidUint16Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]uint16]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []uint16{1, 2, 3}, res)
+		})
+	}
+
+	// uint32
+	{
+		t.Run("LookupValidUint32", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[uint32]("V1")
+			assertNoError(t, err)
+			assertEqual(t, uint32(42), res)
+		})
+	}
+
+	// []uint32
+	{
+		t.Run("LookupValidUint32Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]uint32]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []uint32{1, 2, 3}, res)
+		})
+	}
+
+	// uint64
+	{
+		t.Run("LookupValidUint64", func(t *testing.T) {
+			t.Setenv("V1", "42")
+
+			res, err := env.Lookup[uint64]("V1")
+			assertNoError(t, err)
+			assertEqual(t, uint64(42), res)
+		})
+	}
+
+	// []uint64
+	{
+		t.Run("LookupValidUint64Slice", func(t *testing.T) {
+			t.Setenv("V1", "1,2,3")
+
+			res, err := env.Lookup[[]uint64]("V1")
+			assertNoError(t, err)
+			assertEqualSlices(t, []uint64{1, 2, 3}, res)
 		})
 	}
 }

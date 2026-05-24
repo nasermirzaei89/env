@@ -39,13 +39,13 @@ func TestIs(t *testing.T) {
 		assertTrue(t, env.Is(env.Testing))
 	})
 
-	t.Run("Multiple Envs", func(t *testing.T) {
+	t.Run("Multiple Envs - match second", func(t *testing.T) {
 		t.Setenv("ENV", "testing")
 
 		assertTrue(t, env.Is(env.Development, env.Testing))
 	})
 
-	t.Run("Multiple Envs", func(t *testing.T) {
+	t.Run("Multiple Envs - match first", func(t *testing.T) {
 		t.Setenv("ENV", "testing")
 
 		assertTrue(t, env.Is(env.Testing, env.Development))

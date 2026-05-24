@@ -1,37 +1,48 @@
 package env
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"time"
 )
 
-// GetDuration extracts duration value from env. If not set, returns default value.
-func GetDuration(key string, def time.Duration) time.Duration {
+// LookupDuration extracts duration value from env. If not set, returns NotSetError.
+// If the value cannot be parsed, returns InvalidValueError.
+func LookupDuration(key string) (time.Duration, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
+		return 0, NotSetError{Key: key}
+	}
+
+	v, err := time.ParseDuration(s)
+	if err != nil {
+		return 0, InvalidValueError{Key: key, Value: s, Err: err}
+	}
+
+	return v, nil
+}
+
+// GetDuration extracts duration value from env. If not set, returns default value.
+func GetDuration(key string, def time.Duration) time.Duration {
+	v, err := LookupDuration(key)
+	if err == nil {
+		return v
+	}
+
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
 		return def
 	}
 
-	res, err := time.ParseDuration(s)
-	if err != nil {
-		panic(fmt.Sprintf("environment variable %q has invalid duration value: %v", key, err))
-	}
-
-	return res
+	panic(err)
 }
 
 // MustGetDuration extracts duration value from env. If not set, it panics.
 func MustGetDuration(key string) time.Duration {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable %q not set", key))
-	}
-
-	res, err := time.ParseDuration(s)
+	v, err := LookupDuration(key)
 	if err != nil {
-		panic(fmt.Sprintf("environment variable %q has invalid duration value: %v", key, err))
+		panic(err)
 	}
 
-	return res
+	return v
 }

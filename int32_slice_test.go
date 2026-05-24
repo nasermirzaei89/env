@@ -1,6 +1,7 @@
 package env_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/nasermirzaei89/env"
@@ -72,5 +73,33 @@ func TestMustGetInt32Slice(t *testing.T) {
 
 		res := env.MustGetInt32Slice("V1")
 		assertEqualSlices(t, expected, res)
+	})
+}
+
+func TestLookupInt32Slice(t *testing.T) {
+	t.Run("LookupAbsentInt32Slice", func(t *testing.T) {
+		_, err := env.LookupInt32Slice("V1")
+
+		var notSetErr env.NotSetError
+		assertTrue(t, errors.As(err, &notSetErr))
+		assertEqual(t, "V1", notSetErr.Key)
+	})
+
+	t.Run("LookupValidInt32Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,3")
+
+		res, err := env.LookupInt32Slice("V1")
+		assertNoError(t, err)
+		assertEqualSlices(t, []int32{1, 2, 3}, res)
+	})
+
+	t.Run("LookupInvalidInt32Slice", func(t *testing.T) {
+		t.Setenv("V1", "1,2,Three")
+
+		_, err := env.LookupInt32Slice("V1")
+
+		var invalidValueErr env.InvalidValueError
+		assertTrue(t, errors.As(err, &invalidValueErr))
+		assertEqual(t, "V1", invalidValueErr.Key)
 	})
 }

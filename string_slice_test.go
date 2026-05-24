@@ -1,6 +1,7 @@
 package env_test
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -52,6 +53,25 @@ func TestMustGetStringSlice(t *testing.T) {
 		t.Setenv("V1", strings.Join(expected, ","))
 
 		res := env.MustGetStringSlice("V1")
+		assertEqualSlices(t, expected, res)
+	})
+}
+
+func TestLookupStringSlice(t *testing.T) {
+	t.Run("LookupAbsentStringSlice", func(t *testing.T) {
+		_, err := env.LookupStringSlice("V1")
+
+		var notSetErr env.NotSetError
+		assertTrue(t, errors.As(err, &notSetErr))
+		assertEqual(t, "V1", notSetErr.Key)
+	})
+
+	t.Run("LookupValidStringSlice", func(t *testing.T) {
+		expected := []string{"foo", "bar", "baz"}
+		t.Setenv("V1", strings.Join(expected, ","))
+
+		res, err := env.LookupStringSlice("V1")
+		assertNoError(t, err)
 		assertEqualSlices(t, expected, res)
 	})
 }

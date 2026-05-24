@@ -2,6 +2,7 @@ package env_test
 
 import (
 	"runtime/debug"
+	"slices"
 	"testing"
 )
 
@@ -34,20 +35,7 @@ func assertFalse(t *testing.T, value bool) {
 func assertEqualSlices[T comparable](t *testing.T, expected, actual []T) {
 	t.Helper()
 
-	var equal bool
-
-	if len(actual) == len(expected) {
-		equal = true
-
-		for i := range actual {
-			if actual[i] != expected[i] {
-				equal = false
-				break
-			}
-		}
-	}
-
-	if !equal {
+	if !slices.Equal(expected, actual) {
 		t.Errorf("expected: %#v\n actual: %#v", expected, actual)
 	}
 }
@@ -60,6 +48,16 @@ func assertPanics(t *testing.T, f func()) {
 	}
 
 	t.Error("expected panic")
+}
+
+func assertNoError(t *testing.T, err error) {
+	t.Helper()
+
+	if err == nil {
+		return
+	}
+
+	t.Errorf("unexpected error: %v", err)
 }
 
 func didPanic(f func()) (funcDidPanic bool, message any, stack string) {

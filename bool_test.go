@@ -1,6 +1,7 @@
 package env_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/nasermirzaei89/env"
@@ -36,8 +37,9 @@ func TestGetBool(t *testing.T) {
 	t.Run("GetEmptyAsBoolWithDefault", func(t *testing.T) {
 		t.Setenv("V1", "")
 
-		res := env.GetBool("V1", false)
-		assertTrue(t, res)
+		assertPanics(t, func() {
+			env.GetBool("V1", false)
+		})
 	})
 
 	t.Run("GetOneAsBoolWithDefault", func(t *testing.T) {
@@ -81,5 +83,34 @@ func TestMustGetBool(t *testing.T) {
 
 		res := env.MustGetBool("V1")
 		assertTrue(t, res)
+	})
+}
+
+func TestLookupBool(t *testing.T) {
+	t.Run("LookupAbsentBool", func(t *testing.T) {
+		_, err := env.LookupBool("V1")
+
+		var notSetErr env.NotSetError
+		assertTrue(t, errors.As(err, &notSetErr))
+		assertEqual(t, "V1", notSetErr.Key)
+	})
+
+	t.Run("LookupValidBool", func(t *testing.T) {
+		t.Setenv("V1", "true")
+
+		res, err := env.LookupBool("V1")
+		assertNoError(t, err)
+		assertTrue(t, res)
+	})
+
+	t.Run("LookupInvalidBool", func(t *testing.T) {
+		t.Setenv("V1", "invalid")
+
+		_, err := env.LookupBool("V1")
+
+		var invalidValueErr env.InvalidValueError
+		assertTrue(t, errors.As(err, &invalidValueErr))
+		assertEqual(t, "V1", invalidValueErr.Key)
+		assertEqual(t, "invalid", invalidValueErr.Value)
 	})
 }

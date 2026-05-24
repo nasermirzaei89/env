@@ -1,37 +1,43 @@
 package env
 
 import (
-	"fmt"
 	"os"
 	"strings"
 )
 
-// GetStringSlice extracts slice of string values with format "foo,bar,baz" from env.
-// If not set, returns default value.
-func GetStringSlice(key string, def []string) []string {
+// LookupStringSlice extracts slice of string values with format "foo,bar,baz" from env.
+// If not set, returns NotSetError.
+func LookupStringSlice(key string) ([]string, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		return def
+		return nil, NotSetError{Key: key}
 	}
 
 	if len(s) == 0 {
-		return []string{}
+		return []string{}, nil
 	}
 
-	return strings.Split(s, ",")
+	return strings.Split(s, ","), nil
+}
+
+// GetStringSlice extracts slice of string values with format "foo,bar,baz" from env.
+// If not set, returns default value.
+func GetStringSlice(key string, def []string) []string {
+	v, err := LookupStringSlice(key)
+	if err != nil {
+		return def
+	}
+
+	return v
 }
 
 // MustGetStringSlice extracts slice of string values with format "foo,bar,baz" from env.
 // If not set, it panics.
 func MustGetStringSlice(key string) []string {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable %q not set", key))
+	v, err := LookupStringSlice(key)
+	if err != nil {
+		panic(err)
 	}
 
-	if len(s) == 0 {
-		return []string{}
-	}
-
-	return strings.Split(s, ",")
+	return v
 }

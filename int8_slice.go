@@ -1,21 +1,22 @@
 package env
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strconv"
 	"strings"
 )
 
-// GetInt8Slice extracts slice of int8 values with the format "1,2,3" from env. If not set, returns default value.
-func GetInt8Slice(key string, def []int8) []int8 {
+// LookupInt8Slice extracts slice of int8 values with the format "1,2,3" from env.
+// If not set, returns NotSetError. If the value cannot be parsed, returns InvalidValueError.
+func LookupInt8Slice(key string) ([]int8, error) {
 	s, ok := os.LookupEnv(key)
 	if !ok {
-		return def
+		return nil, NotSetError{Key: key}
 	}
 
 	if s == "" {
-		return []int8{}
+		return []int8{}, nil
 	}
 
 	ss := strings.Split(s, ",")
@@ -25,38 +26,36 @@ func GetInt8Slice(key string, def []int8) []int8 {
 	for i := range ss {
 		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize8)
 		if err != nil {
-			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
+			return nil, InvalidValueError{Key: key, Value: s, Err: err}
 		}
 
 		res[i] = int8(v)
 	}
 
-	return res
+	return res, nil
+}
+
+// GetInt8Slice extracts slice of int8 values with the format "1,2,3" from env. If not set, returns default value.
+func GetInt8Slice(key string, def []int8) []int8 {
+	v, err := LookupInt8Slice(key)
+	if err == nil {
+		return v
+	}
+
+	var notSetErr NotSetError
+	if errors.As(err, &notSetErr) {
+		return def
+	}
+
+	panic(err)
 }
 
 // MustGetInt8Slice extracts slice of int8 values with the format "1,2,3" from env. If not set, it panics.
 func MustGetInt8Slice(key string) []int8 {
-	s, ok := os.LookupEnv(key)
-	if !ok {
-		panic(fmt.Sprintf("environment variable %q not set", key))
+	v, err := LookupInt8Slice(key)
+	if err != nil {
+		panic(err)
 	}
 
-	if s == "" {
-		return []int8{}
-	}
-
-	ss := strings.Split(s, ",")
-
-	res := make([]int8, len(ss))
-
-	for i := range ss {
-		v, err := strconv.ParseInt(ss[i], decimalBase, bitSize8)
-		if err != nil {
-			panic(fmt.Sprintf("environment variable %q has an invalid value: %q", key, s))
-		}
-
-		res[i] = int8(v)
-	}
-
-	return res
+	return v
 }
