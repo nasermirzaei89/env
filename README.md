@@ -1,6 +1,7 @@
 # Env
 
-Golang Get Environment Variables Package
+Small and strict environment variable helpers for Go.
+Designed for microservices and containerized applications where configuration should be explicit, predictable, and fail-fast.
 
 ![Build Status](https://github.com/nasermirzaei89/env/actions/workflows/build.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nasermirzaei89/env)](https://goreportcard.com/report/github.com/nasermirzaei89/env)
